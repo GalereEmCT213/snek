@@ -1,5 +1,6 @@
 from collections import deque
 import pygame
+import random
 
 from snek.simulation.consts import Move
 
@@ -18,6 +19,9 @@ class Agent:
         looks for input key press. However, for AI agent, this method should decide the best next move.
         TODO: implement the interact for the AI agent.
         """
+
+        # self.direction = Move.U
+
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 match event.key:
@@ -45,4 +49,5 @@ class Agent:
         """Agent next move based on direction and location."""
         x, y = self.body[0]
         vx, vy = self.direction.value
+
         return x+vx, y+vy
