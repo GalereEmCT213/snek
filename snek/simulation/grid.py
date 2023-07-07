@@ -4,6 +4,7 @@ class Grid:
         self.y = y
 
     def interact(self, x: int, y: int) -> tuple[int, int]:
+        """Interact agent move desire with world."""
         raise NotImplementedError
 
 

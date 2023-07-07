@@ -12,6 +12,12 @@ class Agent:
         self.direction = direction
 
     def interact(self):
+        """Agent interaction with world.
+
+        Here, the agent takes decision from which direction it's going to choose. For the gameplay, it just
+        looks for input key press. However, for AI agent, this method should decide the best next move.
+        TODO: implement the interact for the AI agent.
+        """
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 match event.key:
@@ -25,6 +31,10 @@ class Agent:
                         self.direction = Move.R
 
     def update(self, x: int, y: int) -> bool:
+        """Update position.
+
+        Updates the agent position based on the interaction with world. Updates both body position and sprites.
+        """
         self.body.pop()
         self.body.appendleft((x, y))
         self.sprites.pop()
@@ -32,6 +42,7 @@ class Agent:
         return self.body[0] in self.body
 
     def next_move(self) -> tuple[int, int]:
+        """Agent next move based on direction and location."""
         x, y = self.body[0]
         vx, vy = self.direction.value
         return x+vx, y+vy
