@@ -20,8 +20,6 @@ class Agent:
         TODO: implement the interact for the AI agent.
         """
 
-        # self.direction = Move.U
-
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 match event.key:
@@ -51,3 +49,13 @@ class Agent:
         vx, vy = self.direction.value
 
         return x+vx, y+vy
+
+
+class RandomAgent(Agent):
+    def __init__(self, epsilon: float = 0.1, *args, **kwargs):
+        self.epsilon = epsilon
+        super().__init__(*args, **kwargs)
+
+    def interact(self):
+        if random.random() < self.epsilon:
+            self.direction = random.choice([Move.L, Move.R, Move.D, Move.U])

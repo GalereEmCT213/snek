@@ -5,6 +5,14 @@ from snek.simulation.grid import Grid
 from snek.simulation.consts import Color
 
 
+def check_quit() -> bool:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            return False
+    return True
+
+
 class Game:
     def __init__(self, agent: Agent, grid: Grid, speed=15):
         self.agent = agent
@@ -16,6 +24,7 @@ class Game:
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
         self.fps = pygame.time.Clock()
+        pygame.display.init()
         pygame.display.set_caption('snek')
 
     def update(self):
@@ -24,6 +33,7 @@ class Game:
         return self.agent.update(x, y)
 
     def draw(self):
+        pygame.event.pump()
         self.game_window.fill(Color.BLACK.value)
         for sprite in self.agent.sprites:
             pygame.draw.rect(self.game_window, Color.GREEN.value, sprite)
@@ -31,7 +41,7 @@ class Game:
         self.fps.tick(self.speed)
 
     def play(self):
-        while True:
+        while check_quit():
             self.agent.interact()
             self.update()
             self.draw()
