@@ -35,6 +35,7 @@ class Game:
     def draw(self):
         pygame.event.pump()
         self.game_window.fill(Color.BLACK.value)
+        pygame.draw.rect(self.game_window, Color.RED.value, self.grid.apple)
         for sprite in self.agent.sprites:
             pygame.draw.rect(self.game_window, Color.GREEN.value, sprite)
         pygame.display.update()
