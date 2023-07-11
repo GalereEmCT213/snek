@@ -1,6 +1,8 @@
 ## SCHNEQUI a fazer
 
-	- gerador de maçã (no grid)
+	- gerador de maçã (no grid):
+		* falta verificar onde a cobra está e não gerar no corpo dela
+		* debuggar
 	
 	- regra do game over
 		* matar ao encostar na aprede quando tiver parede
