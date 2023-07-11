@@ -5,5 +5,5 @@ grid = GridLoop()
 # agent = Agent()
 agent = RandomAgent(epsilon=0.2)
 
-game = Game(agent, grid, speed=5)
+game = Game(agent, grid, speed=10)
 game.play()
