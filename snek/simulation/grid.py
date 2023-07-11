@@ -10,7 +10,7 @@ class Grid:
         self.apple_size = 10
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
 
-    def interact(self, x: int, y: int) -> tuple[int, int]:
+    def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         """Interact agent move desire with world."""
         raise NotImplementedError
     
@@ -19,14 +19,24 @@ class Grid:
         self.ya = random.randint(0, self.y)
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
 
+    def check_apple(self, x: int, y: int) -> bool:
+        if x == self.xa and y == self.ya:
+            self.generate_apple()
+            return True
+
+        return False
 
 class GridWall(Grid):
-    def interact(self, x: int, y: int) -> tuple[int, int]:
+    def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         x = min(max(x, 0), self.x-1)
         y = min(max(y, 0), self.y-1)
-        return x, y
+        on_apple = self.check_apple(x, y)
+        return x, y, on_apple
 
 
 class GridLoop(Grid):
-    def interact(self, x: int, y: int) -> tuple[int, int]:
-        return x % self.x, y % self.y
+    def interact(self, x: int, y: int) -> tuple[int, int, bool]:
+        x %= self.x
+        y %= self.y
+        on_apple = self.check_apple(x, y)
+        return x, y, on_apple

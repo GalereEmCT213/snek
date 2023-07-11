@@ -29,8 +29,8 @@ class Game:
 
     def update(self):
         x, y = self.agent.next_move()
-        x, y = self.grid.interact(x, y)
-        return self.agent.update(x, y)
+        x, y, on_apple = self.grid.interact(x, y)
+        return self.agent.update(x, y, on_apple)
 
     def draw(self):
         pygame.event.pump()

@@ -34,16 +34,20 @@ class Agent:
                     case pygame.K_RIGHT:
                         self.direction = Move.R
 
-    def update(self, x: int, y: int) -> bool:
+    def update(self, x: int, y: int, on_apple: bool) -> bool:
         """Update position.
 
         Updates the agent position based on the interaction with world. Updates both body position and sprites.
         """
-        self.body.pop()
+        if not on_apple:
+            self.body.pop()
+            self.sprites.pop()
+
         self.body.appendleft((x, y))
-        self.sprites.pop()
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
+
         return self.body[0] in self.body
+
     
     def validate_next_move(self, current_direction, next_direction) -> bool:
         if current_direction == Move.U and next_direction == Move.D:
