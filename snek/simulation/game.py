@@ -31,6 +31,8 @@ class Game:
     def update(self):
         x, y = self.agent.next_move()
         x, y, on_apple = self.grid.interact(x, y)
+        if on_apple:
+            self.grid.generate_apple(self.agent.body)
         self.end_condition = self.agent.update(x, y, on_apple)
 
     def draw(self):

@@ -1,5 +1,6 @@
 import random
 import pygame
+from collections import deque
 
 class Grid:
     def __init__(self, x: int = 50, y: int = 50):
@@ -14,17 +15,18 @@ class Grid:
         """Interact agent move desire with world."""
         raise NotImplementedError
     
-    def generate_apple(self):
-        self.xa = random.randint(0, self.x - 1)
-        self.ya = random.randint(0, self.y - 1)
-        self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
+    def generate_apple(self, body: deque):
+        available_positions = [(x, y) for x in range(self.x) for y in range(self.y) if (x, y) not in body]
+
+        if available_positions:
+            self.xa, self.ya = random.choice(available_positions)
+            self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
+        
+        # TODO: implement else, which corresponds to game over win
 
     def check_apple(self, x: int, y: int) -> bool:
-        if x == self.xa and y == self.ya:
-            self.generate_apple()
-            return True
+        return x == self.xa and y == self.ya
 
-        return False
 
 class GridWall(Grid):
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
