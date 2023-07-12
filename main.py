@@ -1,9 +1,9 @@
 from snek.simulation import *
 
-grid = GridLoop()
+grid = GridLoop(x=10, y=10)
 # grid = GridWall()
 # agent = Agent()
-agent = RandomAgent(epsilon=0.2)
+agent = RandomAgent(epsilon=0.4)
 
-game = Game(agent, grid, speed=10)
+game = Game(agent, grid, speed=15)
 game.play()

@@ -8,7 +8,7 @@ from snek.simulation.consts import Move
 class Agent:
     def __init__(self, x: int = 0, y: int = 0, direction: Move = Move.R):
         self.initial_size = 5
-        self.body = deque([(x + i, y + 5) for i in range(self.initial_size)])
+        self.body = deque([(x + i, y + 5) for i in reversed(range(self.initial_size))])
         self.size_x, self.size_y = (10, 10)
         self.sprites = deque([pygame.Rect(coord[0] * self.size_x, coord[1] * self.size_y, self.size_x, self.size_y) for coord in self.body])
         self.direction = direction
@@ -46,7 +46,7 @@ class Agent:
         self.body.appendleft((x, y))
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
 
-        return self.body[0] in self.body
+        return self.body[0] in list(self.body)[1:] # Memory usage?
 
     
     def validate_next_move(self, current_direction, next_direction) -> bool:
