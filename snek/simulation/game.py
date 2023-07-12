@@ -6,21 +6,21 @@ from snek.simulation.consts import Color
 
 
 def check_quit() -> bool:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            return False
+    if pygame.event.get(eventtype=pygame.QUIT):
+        pygame.quit()
+        return False
     return True
 
 
 class Game:
-    def __init__(self, agent: Agent, grid: Grid, speed=15):
+    def __init__(self, agent: Agent, grid: Grid, speed=15, manual_end=True):
         self.agent = agent
         self.grid = grid
         self.window = (agent.size_x*grid.x, agent.size_y*grid.y)
         self.speed = speed
         self.background = Color.BLACK
         self.end_condition = False
+        self.manual_end = manual_end
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -50,8 +50,7 @@ class Game:
             self.update()
             self.draw()
 
-        if self.end_condition:
-            self.game_over()
+        self.game_over()
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)
@@ -60,6 +59,7 @@ class Game:
         self.game_window.blit(game_over_surface, game_over_rect)
         pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                pygame.quit()
+        if self.manual_end:
+            while not pygame.event.peek(pygame.QUIT):
+                pass
+        pygame.quit()
