@@ -15,8 +15,8 @@ class Grid:
         raise NotImplementedError
     
     def generate_apple(self):
-        self.xa = random.randint(0, self.x)
-        self.ya = random.randint(0, self.y)
+        self.xa = random.randint(0, self.x - 1)
+        self.ya = random.randint(0, self.y - 1)
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
 
     def check_apple(self, x: int, y: int) -> bool:
