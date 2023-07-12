@@ -26,13 +26,13 @@ class Agent:
             if event.type == pygame.KEYDOWN:
                 match event.key:
                     case pygame.K_UP:
-                        self.direction = Move.U
+                        self.next_direction = Move.U
                     case pygame.K_DOWN:
-                        self.direction = Move.D
+                        self.next_direction = Move.D
                     case pygame.K_LEFT:
-                        self.direction = Move.L
+                        self.next_direction = Move.L
                     case pygame.K_RIGHT:
-                        self.direction = Move.R
+                        self.next_direction = Move.R
 
     def update(self, x: int, y: int, on_apple: bool) -> bool:
         """Update position.
@@ -46,24 +46,19 @@ class Agent:
         self.body.appendleft((x, y))
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
 
-        return self.body[0] in list(self.body)[1:] # Memory usage?
+        return self.body[0] in list(self.body)[1:]  # Memory usage?
 
-    
-    def validate_next_move(self, current_direction, next_direction) -> bool:
-        if current_direction == Move.U and next_direction == Move.D:
-            return False
-        elif current_direction == Move.D and next_direction == Move.U:
-            return False
-        elif current_direction == Move.L and next_direction == Move.R:
-            return False
-        elif current_direction == Move.R and next_direction == Move.L:
-            return False
-        
+    def validate_next_move(self) -> bool:
+        match self.direction:
+            case Move.R: return self.next_direction != Move.L
+            case Move.L: return self.next_direction != Move.R
+            case Move.U: return self.next_direction != Move.D
+            case Move.D: return self.next_direction != Move.U
         return True
 
     def next_move(self) -> tuple[int, int]:
         """Agent next move based on direction and location."""
-        if self.validate_next_move(self.direction, self.next_direction):
+        if self.validate_next_move():
             self.direction = self.next_direction
 
         x, y = self.body[0]
