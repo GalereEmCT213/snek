@@ -1,15 +1,17 @@
 import random
 import pygame
 from collections import deque
+from snek.simulation import agent
 
 class Grid:
-    def __init__(self, x: int = 50, y: int = 50):
+    def __init__(self, agent: agent.Agent, x: int = 50, y: int = 50):
         self.x = x
         self.y = y
-        self.xa = random.randint(0, self.x)
-        self.ya = random.randint(0, self.y)
         self.apple_size = 10
-        self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
+        self.generate_apple(agent.body)
+        # self.xa = random.randint(0, self.x)
+        # self.ya = random.randint(0, self.y)
+        # self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
 
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         """Interact agent move desire with world."""

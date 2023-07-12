@@ -44,22 +44,23 @@ class Game:
         pygame.display.update()
         self.fps.tick(self.speed)
 
-    def play(self):
+    def play(self, manual_end: bool):
         while check_quit() and not self.end_condition:
             self.agent.interact()
             self.update()
             self.draw()
 
         if self.end_condition:
-            self.game_over()
+            self.game_over(manual_end)
 
-    def game_over(self):
+    def game_over(self, manual_end: bool):
         game_over_font = pygame.font.Font(None, 50)
         game_over_surface = game_over_font.render('Git Gud', True, Color.WHITE.value)
         game_over_rect = game_over_surface.get_rect()
         self.game_window.blit(game_over_surface, game_over_rect)
         pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                pygame.quit()
+        if manual_end:
+            if pygame.event.wait():
+                pass
+        pygame.quit()
