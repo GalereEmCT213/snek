@@ -11,9 +11,11 @@ def run_simulation(epsilon: float = 0.1, speed: int = 1000):
 
 
 if __name__ == '__main__':
-    epsilon_list = np.arange(1, step=0.1)
-    average_list = []
+    step = 0.05
     episodes = 100
+
+    epsilon_list = np.append(np.arange(1, step=step), 1)
+    average_list = []
 
     for epsilon in epsilon_list:
         time_history = []
@@ -23,7 +25,7 @@ if __name__ == '__main__':
 
         avg = np.average(time_history)
         average_list.append(avg)
-        print(f'{epsilon=} {avg=}')
+        print(f'{epsilon=:.2f} {avg=:.2f}')
 
     plt.plot(epsilon_list, average_list)
     plt.show()
