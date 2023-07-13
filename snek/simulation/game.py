@@ -48,15 +48,23 @@ class Game:
         self.fps.tick(self.speed)
         self.time += 1
 
+    def init(self):
+        self.agent.init()
+        self.grid.init(self.agent.body)
+        self.time = 0
+        self.score = 0
+
     def play(self):
         self.grid.init(self.agent.body)
 
-        while check_quit() and not self.end_condition:
+        while not self.end_condition:
             self.agent.interact()
             self.update()
             self.draw()
-
-        self.game_over()
+            if not check_quit():
+                break
+        else:
+            self.game_over()
         return self.score, self.time
 
     def game_over(self):

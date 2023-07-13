@@ -12,7 +12,7 @@ def run_simulation(epsilon: float = 0.1, speed: int = 1000):
 
 if __name__ == '__main__':
     step = 0.05
-    episodes = 100
+    episodes = 1000
 
     epsilon_list = np.append(np.arange(1, step=step), 1)
     average_list = []

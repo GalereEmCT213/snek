@@ -8,9 +8,11 @@ from snek.simulation.consts import Move
 class Agent:
     def __init__(self, x: int = 0, y: int = 0, direction: Move = Move.R, initial_size: int = 5):
         self.initial_size = initial_size
+        self.x, self.y = x, y
         self.body = deque((x + i, y + 5) for i in reversed(range(initial_size)))
         self.size_x, self.size_y = (10, 10)
         self.sprites = deque(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y) for x, y in self.body)
+        self.initial_direction = direction
         self.direction = direction
         self.next_direction = direction
 
@@ -65,6 +67,12 @@ class Agent:
 
         return x+vx, y+vy
 
+    def init(self):
+        self.direction = self.initial_direction
+        self.next_direction = self.initial_direction
+        self.body = deque((self.x + i, self.y + 5) for i in reversed(range(self.initial_size)))
+        self.sprites = deque(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y) for x, y in self.body)
+
 
 class RandomAgent(Agent):
     def __init__(self, epsilon: float = 0.1, *args, **kwargs):
@@ -74,4 +82,3 @@ class RandomAgent(Agent):
     def interact(self):
         if random.random() < self.epsilon:
             self.next_direction = random.choice([Move.L, Move.R, Move.D, Move.U])
-
