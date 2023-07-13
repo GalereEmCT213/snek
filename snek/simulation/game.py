@@ -13,7 +13,7 @@ def check_quit() -> bool:
 
 
 class Game:
-    def __init__(self, agent: Agent, grid: Grid, speed=15, manual_end=True):
+    def __init__(self, agent: Agent, grid: Grid, speed=15, manual_end=False):
         self.agent = agent
         self.grid = grid
         self.window = (agent.size_x*grid.x, agent.size_y*grid.y)
@@ -21,6 +21,8 @@ class Game:
         self.background = Color.BLACK
         self.end_condition = False
         self.manual_end = manual_end
+        self.time = 0
+        self.score = 0
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -33,6 +35,7 @@ class Game:
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
             self.grid.generate_apple(self.agent.body)
+            self.score += 100
         self.end_condition = self.agent.update(x, y, on_apple)
 
     def draw(self):
@@ -43,14 +46,18 @@ class Game:
             pygame.draw.rect(self.game_window, Color.GREEN.value, sprite)
         pygame.display.update()
         self.fps.tick(self.speed)
+        self.time += 1
 
     def play(self):
+        self.grid.init(self.agent.body)
+
         while check_quit() and not self.end_condition:
             self.agent.interact()
             self.update()
             self.draw()
 
         self.game_over()
+        return self.score, self.time
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)
