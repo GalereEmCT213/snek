@@ -2,30 +2,36 @@ import random
 import pygame
 from collections import deque
 
+
 class Grid:
     def __init__(self, x: int = 50, y: int = 50):
         self.x = x
         self.y = y
+        self.apple_size = 10
         self.xa = random.randint(0, self.x)
         self.ya = random.randint(0, self.y)
-        self.apple_size = 10
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
 
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         """Interact agent move desire with world."""
         raise NotImplementedError
     
-    def generate_apple(self, body: deque):
-        available_positions = [(x, y) for x in range(self.x) for y in range(self.y) if (x, y) not in body]
+    def generate_apple(self, body: deque[tuple[int, int]]):
+        drop_set = set(body)
+        positions = {(x, y) for x in range(self.x) for y in range(self.y)}
+        available_positions = positions - drop_set
 
         if available_positions:
-            self.xa, self.ya = random.choice(available_positions)
-            self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
+            self.xa, self.ya = random.choice(list(available_positions))
+            self.apple = pygame.Rect(self.apple_size*self.xa, self.apple_size*self.ya, self.apple_size, self.apple_size)
         
         # TODO: implement else, which corresponds to game over win
 
     def check_apple(self, x: int, y: int) -> bool:
         return x == self.xa and y == self.ya
+
+    def init(self, agent_body: deque[tuple[int, int]]):
+        self.generate_apple(agent_body)
 
 
 class GridWall(Grid):
