@@ -78,7 +78,7 @@ class Game:
         pygame.display.flip()
 
         if self.manual_end:
-            while not pygame.event.peek(pygame.KEYDOWN):
+            while not pygame.event.peek(pygame.KEYDOWN) and not pygame.event.peek(pygame.QUIT):
                 pass
         pygame.quit()
 
