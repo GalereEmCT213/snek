@@ -3,6 +3,8 @@ import pygame
 from snek.simulation.agent import Agent
 from snek.simulation.grid import Grid
 from snek.simulation.consts import Color
+from snek.simulation.consts import REWARD
+
 
 
 def check_quit() -> bool:
@@ -22,7 +24,7 @@ class Game:
         self.end_condition = False
         self.manual_end = manual_end
         self.time = 0
-        self.score = 0
+        self.score = Score()
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -35,7 +37,7 @@ class Game:
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
             self.grid.generate_apple(self.agent.body)
-            self.score += 100
+            self.score.reward()
         self.end_condition = self.agent.update(x, y, on_apple)
 
     def draw(self):
@@ -44,6 +46,7 @@ class Game:
         pygame.draw.rect(self.game_window, Color.RED.value, self.grid.apple)
         for sprite in self.agent.sprites:
             pygame.draw.rect(self.game_window, Color.GREEN.value, sprite)
+        self.score.display(self.game_window)
         pygame.display.update()
         self.fps.tick(self.speed)
         self.time += 1
@@ -52,7 +55,7 @@ class Game:
         self.agent.init()
         self.grid.init(self.agent.body)
         self.time = 0
-        self.score = 0
+        self.score = Score()
 
     def play(self):
         self.grid.init(self.agent.body)
@@ -70,11 +73,27 @@ class Game:
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)
         game_over_surface = game_over_font.render('Git Gud', True, Color.WHITE.value)
-        game_over_rect = game_over_surface.get_rect()
+        game_over_rect = game_over_surface.get_rect(topleft = (0,35))
         self.game_window.blit(game_over_surface, game_over_rect)
         pygame.display.flip()
 
         if self.manual_end:
-            while not pygame.event.peek(pygame.QUIT):
+            while not pygame.event.peek(pygame.KEYDOWN):
                 pass
         pygame.quit()
+
+
+
+
+class Score:
+    def __init__(self):
+        self.score = 0
+
+    def reward(self):
+        self.score += REWARD
+
+    def display(self, game_window):
+        score_font = pygame.font.Font(None, 30)
+        score_surface = score_font.render(f'SCORE: {self.score:.0f}', True, Color.YELLOW.value)
+        score_rect = score_surface.get_rect()
+        game_window.blit(score_surface, score_rect)

@@ -2,6 +2,7 @@ from enum import Enum
 
 import pygame
 
+REWARD = 100.0
 
 class Move(Enum):
     L = (-1, 0)
@@ -16,3 +17,4 @@ class Color(Enum):
     RED = pygame.Color(255, 0, 0)
     GREEN = pygame.Color(0, 255, 0)
     BLUE = pygame.Color(0, 0, 255)
+    YELLOW = pygame.Color(255, 255, 0)
