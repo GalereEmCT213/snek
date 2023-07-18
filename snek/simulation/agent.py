@@ -15,6 +15,7 @@ class Agent:
         self.initial_direction = direction
         self.direction = direction
         self.next_direction = direction
+        self.reward = 0
 
     def interact(self):
         """Agent interaction with world.
@@ -35,7 +36,7 @@ class Agent:
                 case pygame.K_RIGHT:
                     self.next_direction = Move.R
 
-    def update(self, x: int, y: int, on_apple: bool) -> bool:
+    def update(self, x: int, y: int, on_apple: bool, reward: int) -> bool:
         """Update position.
 
         Updates the agent position based on the interaction with world. Updates both body position and sprites.
@@ -46,6 +47,7 @@ class Agent:
 
         self.body.appendleft((x, y))
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
+        self.reward = reward
 
         return self.body[0] in list(self.body)[1:]  # Memory usage?
 
@@ -72,6 +74,7 @@ class Agent:
         self.next_direction = self.initial_direction
         self.body = deque((self.x + i, self.y + 5) for i in reversed(range(self.initial_size)))
         self.sprites = deque(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y) for x, y in self.body)
+        self.reward = 0
 
 
 class RandomAgent(Agent):

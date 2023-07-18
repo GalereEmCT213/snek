@@ -14,7 +14,9 @@ readme = 'README.md'
 requires-python = '>=3.11'
 dependencies = [
     'pygame',
-    'numpy'
+    'numpy',
+    'tensorflow',
+    'tensorflow-metal'
 ]
 classifiers = [
     'Topic :: Scientific/Engineering'
