@@ -4,3 +4,4 @@ matplotlib
 
 versioneer
 pytest
+pylint
