@@ -4,6 +4,9 @@ env/
 **/__pycache__/
 *.pyc
 
+# TEST
+.pytest_cache/
+
 # Build
 build/
 dist/
