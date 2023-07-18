@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 from snek.simulation import RandomAgent, Game, GridWall
 
 

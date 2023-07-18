@@ -3,8 +3,7 @@ import pygame
 from snek.simulation.agent import Agent
 from snek.simulation.grid import Grid
 from snek.simulation.consts import Color
-from snek.simulation.consts import REWARD
-
+from snek.simulation.score import Score
 
 
 def check_quit() -> bool:
@@ -81,19 +80,3 @@ class Game:
             while not pygame.event.peek(pygame.KEYDOWN) and not pygame.event.peek(pygame.QUIT):
                 pass
         pygame.quit()
-
-
-
-
-class Score:
-    def __init__(self):
-        self.score = 0
-
-    def reward(self):
-        self.score += REWARD
-
-    def display(self, game_window):
-        score_font = pygame.font.Font(None, 30)
-        score_surface = score_font.render(f'SCORE: {self.score:.0f}', True, Color.YELLOW.value)
-        score_rect = score_surface.get_rect()
-        game_window.blit(score_surface, score_rect)

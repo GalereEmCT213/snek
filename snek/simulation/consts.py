@@ -2,7 +2,6 @@ from enum import Enum
 
 import pygame
 
-REWARD = 100.0
 
 class Move(Enum):
     L = (-1, 0)
