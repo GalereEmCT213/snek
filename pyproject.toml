@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+    'setuptools',
+    'wheel',
+    'versioneer[toml]',
+]
+
+[project]
+name = 'snek-ai'
+dynamic = ['version']
+readme = 'README.md'
+# description = 'A Python framework for AI'
+# authors = [{ name = 'Guilherme Kowalczuk', email='guilhermekowalczuk@gmail.com' }]
+requires-python = '>=3.11'
+dependencies = [
+    'pygame',
+    'numpy'
+]
+classifiers = [
+    'Topic :: Scientific/Engineering'
+]
+
+# [project.urls]
+# repository = 'https://github.com/kowalks/ape-ai'
+
+[project.optional-dependencies]
+test = ['pytest']
+all = [
+    'matplotlib',
+    'ffmpeg-python',
+    'pytest',
+]
+
+[tool.pytest.ini_options]
+pythonpath = '.'
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ['snek', 'snek.*']
+
+[tool.versioneer]
+VCS = 'git'
+style = 'pep440'
+versionfile_source = 'snek/_version.py'
+versionfile_build = 'snek/_version.py'
+tag_prefix = 'v'
+parentdir_prefix = "snek-"
