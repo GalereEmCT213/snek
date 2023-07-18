@@ -37,7 +37,8 @@ class Game:
         if on_apple:
             self.grid.generate_apple(self.agent.body)
             self.score.reward()
-        self.end_condition = self.agent.update(x, y, on_apple)
+        reward = self.score.score
+        self.end_condition = self.agent.update(x, y, on_apple, reward)
 
     def draw(self):
         pygame.event.pump()
