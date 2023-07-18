@@ -10,6 +10,7 @@ class Score:
 
     def reward(self):
         self.score += self.apple_score
+        # TODO: (Possibly not here in this method) Implement euclidean distance calculator
 
     def display(self, game_window):
         score_font = pygame.font.Font(None, 30)

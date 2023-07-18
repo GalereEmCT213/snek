@@ -1,4 +1,5 @@
 from collections import deque
+from tensorflow.keras import models, layers, optimizers, activations, losses
 import pygame
 import random
 
@@ -82,3 +83,28 @@ class RandomAgent(Agent):
     def interact(self):
         if random.random() < self.epsilon:
             self.next_direction = random.choice([Move.L, Move.R, Move.D, Move.U])
+
+
+class DQNAgent(Agent):
+    def __init__(self, *args, epsilon: float = 0.1, gamma: float = 0.95, learning_rate: float = 0.001, buffer_size: int = 4098, **kwargs):
+        self.epsilon = epsilon
+        self.gamma = gamma
+        self.learning_rate = learning_rate
+        self.replay_buffer = deque(maxlen=buffer_size)
+        self.state_size = 12    # TODO: modify this possibly
+        self.action_size = 4
+        self.model = self.make_model()
+        super().__init__(*args, **kwargs)
+
+    def make_model(self):
+        # TODO: Implement
+        # Ideas:
+        ## Simple dense fully connected network, states = danger(U,D,L,R), apple(U,D,L,R), current_direction(U,D,L,R)
+        ## CNN with 3 channels input, 0 = empty, 1 = snake, 2 = apple
+        pass
+
+    def interact(self):
+        # TODO: Implement
+        # Parameters: inform state (which includes snake body and apple positions)
+        # Return: self.model.predict if random > epsilon, otherwise return random action
+        pass
