@@ -75,7 +75,7 @@ class Agent:
 
 
 class RandomAgent(Agent):
-    def __init__(self, epsilon: float = 0.1, *args, **kwargs):
+    def __init__(self, *args, epsilon: float = 0.1, **kwargs):
         self.epsilon = epsilon
         super().__init__(*args, **kwargs)
 
