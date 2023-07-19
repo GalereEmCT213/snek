@@ -3,7 +3,6 @@ numpy
 matplotlib
 tensorflow
 
-
 versioneer
 pytest
 pylint
