@@ -1,7 +1,10 @@
 from collections import deque
-from tensorflow.keras import models, layers, optimizers, activations, losses
+from tensorflow.keras import optimizers, activations, losses
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
 import pygame
 import random
+import numpy as np
 
 from snek.simulation.consts import Move
 
@@ -46,6 +49,7 @@ class Agent:
             self.body.pop()
             self.sprites.pop()
 
+        self.x, self.y = x, y
         self.body.appendleft((x, y))
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
         self.reward = reward
@@ -89,25 +93,88 @@ class RandomAgent(Agent):
 
 
 class DQNAgent(Agent):
-    def __init__(self, *args, epsilon: float = 0.1, gamma: float = 0.95, learning_rate: float = 0.001, buffer_size: int = 4098, **kwargs):
-        self.epsilon = epsilon
-        self.gamma = gamma
-        self.learning_rate = learning_rate
+    def __init__(
+            self,
+            *args,
+            state_size: int = 12,
+            action_size: int = len(Move),
+            gamma: float = 0.95,
+            epsilon: float = 0.5,
+            epsilon_min=0.01,
+            epsilon_decay=0.98,
+            learning_rate: float = 0.001,
+            buffer_size: int = 4098,
+            **kwargs
+        ):
+        self.state_size = state_size
+        self.action_size = action_size
         self.replay_buffer = deque(maxlen=buffer_size)
-        self.state_size = 12    # TODO: modify this possibly
-        self.action_size = 4
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.epsilon_min = epsilon_min
+        self.epsilon_decay = epsilon_decay
+        self.learning_rate = learning_rate
+        self.moves = list(Move)
         self.model = self.make_model()
+        self.state = (self.x, self.y, False)
         super().__init__(*args, **kwargs)
 
     def make_model(self):
-        # TODO: Implement
-        # Ideas:
-        ## Simple dense fully connected network, states = danger(U,D,L,R), apple(U,D,L,R), current_direction(U,D,L,R)
-        ## CNN with 3 channels input, 0 = empty, 1 = snake, 2 = apple
-        pass
+        model = Sequential([
+            Dense(256, input_dim=self.state_size, activation=activations.relu),
+            Dense(256, activation=activations.relu),
+            Dense(self.action_size, activation=activations.linear)
+        ], name='dqn-agent')
+        model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
+        model.summary()
+        return model
+    
+    def replay(self, batch_size):
+        minibatch = random.sample(self.replay_buffer, batch_size)
+        states, targets = [], []
+        for state, action, reward, next_state, done in minibatch:
+            target = self.model.predict(state)
+            if not done:
+                target[0][action] = reward + self.gamma * np.max(self.model.predict(next_state)[0])
+            else:
+                target[0][action] = reward
+            # Filtering out states and targets for training
+            states.append(state[0])
+            targets.append(target[0])
+        history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
+        # Keeping track of loss
+        loss = history.history['loss'][0]
+        return loss
+    
+    def load(self, name):
+        self.model.load_weights(name)
+
+    def save(self, name):
+        self.model.save_weights(name)
+
+    def update_epsilon(self):
+        self.epsilon *= self.epsilon_decay
+        if self.epsilon < self.epsilon_min:
+            self.epsilon = self.epsilon_min
 
     def interact(self):
-        # TODO: Implement
-        # Parameters: inform state (which includes snake body and apple positions)
-        # Return: self.model.predict if random > epsilon, otherwise return random action
-        pass
+        if np.random.rand() < self.epsilon:
+            self.next_direction = random.choice([Move.L, Move.R, Move.D, Move.U])
+        else:
+            actions = self.model.predict(self.state)
+            best_action = np.argmax(actions)
+            self.next_direction = self.moves[best_action]
+
+    def update(self, x: int, y: int, on_apple: bool, reward: int) -> bool:
+        # previous_state = (self.x, self.y, self.on_apple)
+        # next_state = (x, y, on_apple)
+
+        next_state = (x, y, on_apple)
+        game_over = super().update(x, y, on_apple, reward)
+        self.replay_buffer.append((self.state, self.next_direction, reward, next_state, game_over))
+        self.state = next_state
+
+        # Change state (x, y, on_apple) to state properly
+        # self.replay_buffer.append((, self.next_direction, reward, next_state, game_over))
+
+        return game_over
