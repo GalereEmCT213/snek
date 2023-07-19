@@ -32,6 +32,7 @@ class Reward:
         return self.reward
 
     def dist_apple_head(
+            self,
             apple: tuple, 
             head: tuple) -> float:
         
