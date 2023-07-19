@@ -77,7 +77,6 @@ class Agent:
         self.next_direction = self.initial_direction
         self.body = deque((self.x + i, self.y + 5) for i in reversed(range(self.initial_size)))
         self.sprites = deque(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y) for x, y in self.body)
-        self.reward = 0
 
 
 class RandomAgent(Agent):
@@ -168,7 +167,7 @@ class DQNAgent(Agent):
         # next_state = (x, y, on_apple)
 
         next_state = (x, y, on_apple)
-        game_over = super().update(x, y, on_apple, reward)
+        game_over = super().update(x, y, on_apple)
         self.replay_buffer.append((self.state, self.next_direction, reward, next_state, game_over))
         self.state = next_state
 
