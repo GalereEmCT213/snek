@@ -2,7 +2,7 @@ pygame
 numpy
 matplotlib
 tensorflow
-tensorflow-metal
+
 
 versioneer
 pytest
