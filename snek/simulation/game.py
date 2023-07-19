@@ -4,6 +4,7 @@ from snek.simulation.agent import Agent
 from snek.simulation.grid import Grid
 from snek.simulation.consts import Color
 from snek.simulation.score import Score
+from snek.simulation.reward import Reward
 
 
 def check_quit() -> bool:
@@ -24,6 +25,7 @@ class Game:
         self.manual_end = manual_end
         self.time = 0
         self.score = Score()
+        self.reward =Reward()
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -36,9 +38,12 @@ class Game:
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
             self.grid.generate_apple(self.agent.body)
-            self.score.reward()
-        reward = self.score.score
-        self.end_condition = self.agent.update(x, y, on_apple, reward)
+            self.score.prize()
+            self.reward.reward_engine(
+                apple_score = self.score.apple_score)
+        self.end_condition = self.agent.update(x, y, on_apple)
+        self.reward.reward_engine( 
+            dead = self.end_condition)
 
     def draw(self):
         pygame.event.pump()
