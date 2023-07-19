@@ -89,10 +89,10 @@ class DQNAgent(Agent):
         idx = np.argmax(actions)
         self.next_direction = self.moves[idx]
 
-    def update(self, x: int, y: int, on_apple: bool, reward: int) -> bool:
+    def update(self, x: int, y: int, on_apple: bool) -> bool:
         # previous_state = (self.x, self.y, self.on_apple)
         # next_state = (x, y, on_apple)
-        game_over = super().update(x, y, on_apple, reward)
+        game_over = super().update(x, y, on_apple)
 
         # Change state (x, y, on_apple) to state properly
         # self.replay_buffer.append((, self.next_direction, reward, next_state, game_over))
