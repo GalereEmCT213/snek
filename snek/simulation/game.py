@@ -4,6 +4,7 @@ from snek.simulation.agent import Agent
 from snek.simulation.grid import Grid
 from snek.simulation.consts import Color
 from snek.simulation.score import Score
+from snek.simulation.reward import Reward
 
 
 def check_quit() -> bool:
@@ -24,6 +25,7 @@ class Game:
         self.manual_end = manual_end
         self.time = 0
         self.score = Score()
+        self.reward = Reward()
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -31,14 +33,17 @@ class Game:
         pygame.display.init()
         pygame.display.set_caption('snek')
 
-    def update(self):
+    def update(self, train=False):
         x, y = self.agent.next_move()
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
             self.grid.generate_apple(self.agent.body)
-            self.score.reward()
-        reward = self.score.score
-        self.end_condition = self.agent.update(x, y, on_apple, reward)
+            self.score.prize()
+            self.reward.reward_engine(apple_score=self.score.apple_score)
+        self.end_condition = self.agent.update(x, y, on_apple)
+        self.reward.reward_engine(dead = self.end_condition)
+        if train:
+            print('train')
 
     def draw(self):
         pygame.event.pump()
@@ -57,18 +62,18 @@ class Game:
         self.time = 0
         self.score = Score()
 
-    def play(self):
+    def play(self, train=False):
         self.grid.init(self.agent.body)
 
         while not self.end_condition:
             self.agent.interact()
-            self.update()
+            self.update(train=train)
             self.draw()
             if not check_quit():
                 break
         else:
             self.game_over()
-        return self.score, self.time
+        return self.reward, self.time
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)

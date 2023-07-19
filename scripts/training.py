@@ -1,4 +1,6 @@
 import os
+import numpy as np
+import matplotlib as plt
 
 from snek.learning import DQNAgent
 from snek.simulation import GridLoop, Game
