@@ -40,3 +40,4 @@ class Reward:
         head = np.array(head)
 
         return np.ceil(np.linalg.norm(apple-head)).astype('int')
+    

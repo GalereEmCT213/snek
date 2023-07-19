@@ -98,3 +98,4 @@ class DQNAgent(Agent):
         # self.replay_buffer.append((, self.next_direction, reward, next_state, game_over))
 
         return game_over
+    

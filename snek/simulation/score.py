@@ -3,7 +3,7 @@ import pygame
 from snek.simulation.consts import Color
 
 class Score:
-    def __init__(self, apple_score: int = 100, time_score: int = 1):
+    def __init__(self, apple_score: int = 100):
         self.apple_score = apple_score
         self.score = 0
 
