@@ -15,7 +15,7 @@ class Reward:
             self, 
             apple_score: int = 0, 
             snake_body: deque = None,
-            score_time: int = 0,
+            apple_pos: tuple = None,
             dead: bool = False): 
         """
         Calculate the total reward after an update
@@ -25,6 +25,10 @@ class Reward:
         :param score_time: the time that has passed
         :param dead: indicates if the snake is still alive 
         """
+        if apple_pos is not None and snake_body is not None:
+            head = snake_body[0]
+            dist = self.dist_apple_head(apple_pos, head)
+
         reward = apple_score - self.death_factor*dead
         self.reward += reward
 
