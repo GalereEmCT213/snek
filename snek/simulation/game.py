@@ -73,7 +73,7 @@ class Game:
                 break
         else:
             self.game_over()
-        return self.score, self.time
+        return self.reward, self.time
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)

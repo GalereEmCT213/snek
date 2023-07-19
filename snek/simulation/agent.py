@@ -39,7 +39,7 @@ class Agent:
                 case pygame.K_RIGHT:
                     self.next_direction = Move.R
 
-    def update(self, x: int, y: int, on_apple: bool) -> bool:
+    def update(self, x: int, y: int, on_apple: bool, reward = None) -> bool:
         """Update position.
 
         Updates the agent position based on the interaction with world. Updates both body position and sprites.
