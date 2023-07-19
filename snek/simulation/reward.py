@@ -28,6 +28,7 @@ class Reward:
         if apple_pos is not None and snake_body is not None:
             head = snake_body[0]
             dist = self.dist_apple_head(apple_pos, head)
+            print(dist)
 
         reward = apple_score - self.death_factor*dead
         self.reward += reward

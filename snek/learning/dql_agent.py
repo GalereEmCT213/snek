@@ -20,7 +20,8 @@ class DQNAgent(Agent):
             epsilon_min=0.01,
             epsilon_decay=0.98,
             learning_rate=0.001,
-            buffer_size=4098
+            buffer_size=4098,
+            batch_size=32
         ):
         self.state_size = state_size
         self.action_size = action_size
@@ -30,6 +31,7 @@ class DQNAgent(Agent):
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.learning_rate = learning_rate
+        self.batch_size = batch_size
         self.moves = list(Move)
         self.model = self.make_model()
         super().__init__()
@@ -93,9 +95,13 @@ class DQNAgent(Agent):
         # previous_state = (self.x, self.y, self.on_apple)
         # next_state = (x, y, on_apple)
         game_over = super().update(x, y, on_apple)
+        return game_over
 
         # Change state (x, y, on_apple) to state properly
-        # self.replay_buffer.append((, self.next_direction, reward, next_state, game_over))
+        # 
 
-        return game_over
-    
+    def train(self, state, action, reward, next_state, done):
+        self.replay_buffer.append((state, action, reward, next_state, done))
+        if len(self.replay_buffer) > 2 * self.batch_size:
+            loss = self.replay(self.batch_size)
+            print(loss)
