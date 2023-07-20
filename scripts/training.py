@@ -12,7 +12,7 @@ epsilon = 0.1
 gamma = 0.95
 batch_size = 32
 
-agent = DQNAgent(epsilon=0.1, state_size=(50,50,3), action_size=4, gamma=gamma)
+agent = DQNAgent(epsilon=0.1, state_size=(8,), action_size=4, gamma=gamma)
 grid = GridWall()
 game = Game(agent, grid, speed=150, manual_end=False)
 
@@ -38,4 +38,4 @@ for episodes in range(1, num_episodes+1):
         plt.show(block=False)
         plt.pause(0.1)
         plt.savefig(f'dqn_training.{fig_format}', format=fig_format)
-        agent.save(f'{agent_name}.h5')
+        # agent.save(f'{agent_name}.h5')

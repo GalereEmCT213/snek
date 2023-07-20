@@ -10,9 +10,9 @@ class Reward:
         """
         self.reward = 0
         self.death_factor = -1000
-        self.apple_factor = 100
+        self.apple_factor = 0
         self.tick_factor = 1
-        self.dist_factor = -10
+        self.dist_factor = 0
 
     def reward_engine(
             self,

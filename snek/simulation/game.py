@@ -3,7 +3,7 @@ import numpy as np
 
 from snek.simulation.agent import Agent
 from snek.simulation.grid import Grid
-from snek.simulation.consts import Color
+from snek.simulation.consts import Color, Move
 from snek.simulation.score import Score
 from snek.simulation.reward import Reward
 
@@ -80,7 +80,6 @@ class Game:
                 reward = self.reward.reward
                 done = self.end_condition
                 next_state = self._generate_state()
-                next_state = next_state
                 self.agent.train(state, action, reward, next_state, done)
                 state = next_state
 
@@ -108,14 +107,20 @@ class Game:
             pygame.quit()
 
     def _generate_state(self):
-        sx, sy = self.grid.x, self.grid.y  # Grid size
-        state = np.zeros((sx, sy, 3))  # Initialize state
+        ax, ay = self.apple
+        hx, hy =self.agent.body[0]
 
-        state[self.grid.xa, self.grid.ya, 0] = 1  # Apple position
-        state[self.agent.body[0][0], self.agent.body[0][1], 1] = 1  # Agent head position
+        l = (hx == 0)
+        r = (hx == self.grid.x-1)
+        u = (hy == 0)
+        d = (hy == self.grid.y-1)
 
-        for x, y in self.agent.body:
-            state[x, y, 2] = 1  # Agent body position
+        match self.agent.direction:
+            case Move.R: l = True
+            case Move.L: r = True
+            case Move.U: d = True
+            case Move.D: u = True
         
-        return state[np.newaxis, :]
+        state = [l, r, u, d, hx, hy, ax, ay]
+        return np.array([state])
 

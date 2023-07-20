@@ -37,12 +37,8 @@ class DQNAgent(Agent):
     
     def make_model(self):
         model = Sequential([
-            layers.Conv2D(filters=16, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
-            layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)),
-            layers.Conv2D(filters=32, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
-            layers.Flatten(),
-            layers.Dense(128, activation=activations.relu),
-            layers.Dense(self.action_size, activation=activations.softmax),
+            layers.Dense(256, activation=activations.relu, input_shape=self.state_size),
+            layers.Dense(self.action_size, activation=activations.relu),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
         model.summary()
@@ -107,5 +103,4 @@ class DQNAgent(Agent):
     def train(self, state, action, reward, next_state, done):
         self.replay_buffer.append((state, action, reward, next_state, done))
         if len(self.replay_buffer) > 2 * self.batch_size:
-            print('replay')
             self.replay(self.batch_size)
