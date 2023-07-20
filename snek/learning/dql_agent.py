@@ -35,33 +35,70 @@ class DQNAgent(Agent):
         self.model = self.make_model()
         super().__init__()
     
+    # def make_model(self):
+    #     model = Sequential([
+    #         layers.Dense(256, activation=activations.relu, input_shape=self.state_size),
+    #         layers.Dense(self.action_size, activation=activations.linear),
+    #     ], name='dqn-agent')
+    #     model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
+    #     model.summary()
+    #     return model
+
     def make_model(self):
         model = Sequential([
-            layers.Dense(256, activation=activations.relu, input_shape=self.state_size),
-            layers.Dense(self.action_size, activation=activations.linear),
+            layers.Dense(128, activation=activations.relu, input_shape=self.state_size),
+            layers.Dense(128, activation=activations.relu),
+            layers.Dense(128, activation=activations.relu),
+            layers.Dense(self.action_size, activation=activations.softmax),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
-        model.summary()
         return model
 
+    # def replay(self, batch_size):
+    #     minibatch = random.sample(self.replay_buffer, batch_size)
+    #     states, targets = [], []
+    #     for state, action, reward, next_state, done in minibatch:
+    #         target = self.model.predict(state, verbose=0)
+    #         action_idx = self.moves.index(action)
+    #         if not done:
+    #             target[0][action_idx] = reward + self.gamma * np.max(self.model.predict(next_state, verbose=0)[0])
+    #         else:
+    #             target[0][action_idx] = reward
+    #         # Filtering out states and targets for training
+    #         states.append(state[0])
+    #         targets.append(target[0])
+    #     history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
+    #     # Keeping track of loss
+    #     loss = history.history['loss'][0]
+    #     self.replay_buffer.clear()
+    #     return loss
+
     def replay(self, batch_size):
+        if len(self.replay_buffer) < batch_size:
+            return
+        
         minibatch = random.sample(self.replay_buffer, batch_size)
-        states, targets = [], []
-        for state, action, reward, next_state, done in minibatch:
-            target = self.model.predict(state, verbose=0)
-            action_idx = self.moves.index(action)
-            if not done:
-                target[0][action_idx] = reward + self.gamma * np.max(self.model.predict(next_state, verbose=0)[0])
-            else:
-                target[0][action_idx] = reward
-            # Filtering out states and targets for training
-            states.append(state[0])
-            targets.append(target[0])
-        history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
-        # Keeping track of loss
-        loss = history.history['loss'][0]
-        self.replay_buffer.clear()
-        return loss
+        states = np.array([sample[0] for sample in minibatch])
+        actions = np.array([sample[1] for sample in minibatch])
+        actions_idx = np.array([self.moves.index(action) for action in actions])
+        rewards = np.array([sample[2] for sample in minibatch])
+        next_states = np.array([sample[3] for sample in minibatch])
+        dones = np.array([sample[4] for sample in minibatch])
+
+        print(actions)
+        print(actions_idx)
+
+        states = np.squeeze(states)
+        next_states = np.squeeze(next_states)
+
+        targets = rewards + self.gamma * np.amax(self.model.predict_on_batch(next_states), axis=1) * (1-dones)
+        current_targets = self.model.predict_on_batch(states)
+
+        idx = np.array([i for i in range(batch_size)])
+        current_targets[[idx], [actions_idx]] = targets
+
+        self.model.fit(states, current_targets, epochs=1, verbose=0)
+
 
     def load(self, name):
         self.model.load_weights(name)

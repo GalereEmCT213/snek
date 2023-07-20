@@ -118,8 +118,6 @@ class Game:
         # Check position of apple relative to the snake:
         apple_up = apple_down = apple_left = apple_right = 0
 
-        print('x', hx, ax, 'y', hy, ay)
-
         apple_up = (hy > ay)
         apple_down = (hy < ay)
         apple_left = (hx > ax)
