@@ -88,7 +88,8 @@ class DQNAgent(Agent):
 
     def interact(self, state):
         if np.random.rand() < self.epsilon:
-            return random.randrange(self.action_size)
+            self.next_direction = self.moves[random.randrange(self.action_size)]
+            return
 
         actions = self.model.predict(state, verbose=0)
         actions = actions.reshape(-1)
