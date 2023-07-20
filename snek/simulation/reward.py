@@ -9,14 +9,19 @@ class Reward:
         Deep Q-Learning model
         """
         self.reward = 0
-        self.death_factor = 1000
+        self.death_factor = -1000
+        self.apple_factor = 100
+        self.tick_factor = 1
+        self.dist_factor = -10
 
     def reward_engine(
-            self, 
-            apple_score: int = 0, 
+            self,
             snake_body: deque = None,
             apple_pos: tuple = None,
-            dead: bool = False): 
+            appl: bool = False,
+            dead: bool = False,
+            tick: bool = False,
+        ): 
         """
         Calculate the total reward after an update
 
@@ -27,16 +32,12 @@ class Reward:
         """
         if apple_pos is not None and snake_body is not None:
             head = snake_body[0]
-            dist = self.dist_apple_head(apple_pos, head)
-            print(dist)
+            self.dist = self._dist_apple_head(apple_pos, head)
 
-        reward = apple_score - self.death_factor*dead
+        reward = self.apple_factor*appl + self.death_factor*dead + self.tick_factor*tick + self.dist_factor*self.dist
         self.reward += reward
 
-    def get_reward(self):
-        return self.reward
-
-    def dist_apple_head(
+    def _dist_apple_head(
             self,
             apple: tuple, 
             head: tuple) -> float:
@@ -46,3 +47,5 @@ class Reward:
 
         return np.ceil(np.linalg.norm(apple-head)).astype('int')
     
+    def init(self):
+        self.reward = 0

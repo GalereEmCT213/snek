@@ -1,8 +1,8 @@
-from snek.simulation import Agent, GridLoop, GridWall, Game, RandomAgent
+from snek.simulation import PlayerAgent, GridLoop, GridWall, Game, RandomAgent
 
 if __name__ == '__main__':
     # Normal game definition
-    agent = Agent()
+    agent = PlayerAgent()
     grid = GridWall(x=50, y=50)
     normal_game = Game(agent, grid, speed=15, manual_end=True)
 

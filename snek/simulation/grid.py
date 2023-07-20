@@ -11,10 +11,6 @@ class Grid:
         self.xa = random.randint(0, self.x)
         self.ya = random.randint(0, self.y)
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
-
-    def interact(self, x: int, y: int) -> tuple[int, int, bool]:
-        """Interact agent move desire with world."""
-        raise NotImplementedError
     
     def generate_apple(self, body: deque[tuple[int, int]]):
         drop_set = set(body)
@@ -25,13 +21,17 @@ class Grid:
             self.xa, self.ya = random.choice(list(available_positions))
             self.apple = pygame.Rect(self.apple_size*self.xa, self.apple_size*self.ya, self.apple_size, self.apple_size)
         
-        # TODO: implement else, which corresponds to game over win
+        return self.xa, self.ya
 
     def check_apple(self, x: int, y: int) -> bool:
         return x == self.xa and y == self.ya
 
     def init(self, agent_body: deque[tuple[int, int]]):
-        self.generate_apple(agent_body)
+        return self.generate_apple(agent_body)
+    
+    def interact(self, x: int, y: int) -> tuple[int, int, bool]:
+        """Interact agent move desire with world."""
+        raise NotImplementedError
 
 
 class GridWall(Grid):

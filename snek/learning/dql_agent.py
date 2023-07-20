@@ -3,11 +3,10 @@
 import collections
 import random
 import numpy as np
-from tensorflow.keras import activations, losses, optimizers
-from tensorflow.keras.layers import Dense
+from tensorflow.keras import activations, losses, optimizers, layers
 from tensorflow.keras.models import Sequential
 
-from snek.simulation import Agent
+from snek.simulation.agent import Agent
 from snek.simulation.consts import Move
 
 class DQNAgent(Agent):
@@ -38,9 +37,12 @@ class DQNAgent(Agent):
     
     def make_model(self):
         model = Sequential([
-            Dense(256, input_dim=self.state_size, activation=activations.relu),
-            Dense(256, activation=activations.relu),
-            Dense(self.action_size, activation=activations.linear)
+            layers.Conv2D(filters=16, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
+            layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)),
+            layers.Conv2D(filters=32, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
+            layers.Flatten(),
+            layers.Dense(128, activation=activations.relu),
+            layers.Dense(self.action_size, activation=activations.softmax),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
         model.summary()
@@ -50,17 +52,19 @@ class DQNAgent(Agent):
         minibatch = random.sample(self.replay_buffer, batch_size)
         states, targets = [], []
         for state, action, reward, next_state, done in minibatch:
-            target = self.model.predict(state)
+            target = self.model.predict(state, verbose=0)
+            action_idx = self.moves.index(action)
             if not done:
-                target[0][action] = reward + self.gamma * np.max(self.model.predict(next_state)[0])
+                target[0][action_idx] = reward + self.gamma * np.max(self.model.predict(next_state, verbose=0)[0])
             else:
-                target[0][action] = reward
+                target[0][action_idx] = reward
             # Filtering out states and targets for training
             states.append(state[0])
             targets.append(target[0])
         history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
         # Keeping track of loss
         loss = history.history['loss'][0]
+        self.replay_buffer.clear()
         return loss
 
     def load(self, name):
@@ -70,7 +74,7 @@ class DQNAgent(Agent):
         if np.random.rand() < self.epsilon:
             return random.randrange(self.action_size)
         
-        actions = self.model.predict(state)
+        actions = self.model.predict(state, verbose=0)
         actions = actions.reshape(-1)
         return np.argmax(actions)
 
@@ -82,11 +86,11 @@ class DQNAgent(Agent):
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
 
-    def interact(self, state=None):
+    def interact(self, state):
         if np.random.rand() < self.epsilon:
             return random.randrange(self.action_size)
-        
-        actions = self.model.predict(state)
+
+        actions = self.model.predict(state, verbose=0)
         actions = actions.reshape(-1)
         idx = np.argmax(actions)
         self.next_direction = self.moves[idx]
@@ -103,5 +107,5 @@ class DQNAgent(Agent):
     def train(self, state, action, reward, next_state, done):
         self.replay_buffer.append((state, action, reward, next_state, done))
         if len(self.replay_buffer) > 2 * self.batch_size:
-            loss = self.replay(self.batch_size)
-            print(loss)
+            print('replay')
+            self.replay(self.batch_size)

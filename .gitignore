@@ -6,6 +6,8 @@ env/
 
 # TEST
 .pytest_cache/
+*.h5
+*.png
 
 # Build
 build/
