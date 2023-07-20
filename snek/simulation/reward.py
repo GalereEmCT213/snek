@@ -9,7 +9,8 @@ class Reward:
         Deep Q-Learning model
         """
         self.reward = 0
-        self.death_factor = -1000
+        self.history = 0
+        self.death_factor = -100
         self.apple_factor = 0
         self.tick_factor = 1
         self.dist_factor = 0
@@ -35,7 +36,8 @@ class Reward:
             self.dist = self._dist_apple_head(apple_pos, head)
 
         reward = self.apple_factor*appl + self.death_factor*dead + self.tick_factor*tick + self.dist_factor*self.dist
-        self.reward += reward
+        self.reward = reward
+        self.history += reward
 
     def _dist_apple_head(
             self,
@@ -49,3 +51,4 @@ class Reward:
     
     def init(self):
         self.reward = 0
+        self.history = 0

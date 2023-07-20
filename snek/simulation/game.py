@@ -80,6 +80,7 @@ class Game:
                 reward = self.reward.reward
                 done = self.end_condition
                 next_state = self._generate_state()
+                print(f'state: {state} ---- done: {done} ---- reward: {reward}')
                 self.agent.train(state, action, reward, next_state, done)
                 state = next_state
 
