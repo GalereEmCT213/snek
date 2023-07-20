@@ -8,11 +8,10 @@ from snek.simulation import GridLoop, Game, GridWall
 agent_name = 'burrice-artificial'
 fig_format = 'png'
 num_episodes = 1000
-epsilon = 0.1
-gamma = 0.95
-batch_size = 32
+gamma = 0.8
+batch_size = 128
 
-agent = DQNAgent(epsilon=0.9, state_size=(8,), action_size=4, gamma=gamma)
+agent = DQNAgent(epsilon=0.9, state_size=(8,), action_size=4, gamma=gamma, epsilon_decay=0.999)
 grid = GridWall(x=20, y=20)
 game = Game(agent, grid, speed=150, manual_end=False)
 
@@ -31,11 +30,11 @@ for episodes in range(1, num_episodes+1):
     print(f'episode: {episodes}, time: {time}, score: {score}')
 
     game.agent.update_epsilon()
-    # if episodes % 20 == 0:
-    #     plt.plot(return_history, 'b')
-    #     plt.xlabel('Episode')
-    #     plt.ylabel('Return')
-    #     plt.show(block=False)
-    #     plt.pause(0.1)
-    #     plt.savefig(f'dqn_training.{fig_format}', format=fig_format)
-    #     agent.save(f'{agent_name}.h5')
+    if episodes % 20 == 0:
+        # plt.plot(return_history, 'b')
+        # plt.xlabel('Episode')
+        # plt.ylabel('Return')
+        # plt.show(block=False)
+        # plt.pause(0.1)
+        # plt.savefig(f'dqn_training.{fig_format}', format=fig_format)
+        agent.save(f'{agent_name}.h5')

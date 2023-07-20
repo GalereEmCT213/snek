@@ -38,7 +38,7 @@ class DQNAgent(Agent):
     def make_model(self):
         model = Sequential([
             layers.Dense(256, activation=activations.relu, input_shape=self.state_size),
-            layers.Dense(self.action_size, activation=activations.relu),
+            layers.Dense(self.action_size, activation=activations.linear),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
         model.summary()
@@ -60,19 +60,11 @@ class DQNAgent(Agent):
         history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
         # Keeping track of loss
         loss = history.history['loss'][0]
-        # self.replay_buffer.clear()
+        self.replay_buffer.clear()
         return loss
 
     def load(self, name):
         self.model.load_weights(name)
-
-    def act(self, state):
-        if np.random.rand() < self.epsilon:
-            return random.randrange(self.action_size)
-        
-        actions = self.model.predict(state, verbose=0)
-        actions = actions.reshape(-1)
-        return np.argmax(actions)
 
     def save(self, name):
         self.model.save_weights(name)
@@ -81,7 +73,7 @@ class DQNAgent(Agent):
         self.epsilon *= self.epsilon_decay
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
-        print(self.epsilon)
+        # print(self.epsilon)
 
     def interact(self, state):
         if np.random.rand() < self.epsilon:
@@ -92,6 +84,7 @@ class DQNAgent(Agent):
         actions = actions.reshape(-1)
         idx = np.argmax(actions)
         self.next_direction = self.moves[idx]
+        print(actions, idx, self.next_direction)
 
     def update(self, x: int, y: int, on_apple: bool) -> bool:
         # previous_state = (self.x, self.y, self.on_apple)

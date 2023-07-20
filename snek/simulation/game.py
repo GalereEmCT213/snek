@@ -68,22 +68,23 @@ class Game:
 
 
     def play(self, train=False):
-        self.grid.init(self.agent.body)
+        self.init()
         state = self._generate_state()
 
         while not self.end_condition:
             self.agent.interact(state)
             self.update()
+            next_state = self._generate_state()
 
             if train:
                 action = self.agent.direction
                 reward = self.reward.reward
                 done = self.end_condition
-                next_state = self._generate_state()
-                print(f'state: {state} ---- act: {action} ---- done: {done} ---- reward: {reward}')
+                # print(f'state: {state} ---- act: {action} ---- done: {done} ---- reward: {reward}')
                 self.agent.train(state, action, reward, next_state, done)
-                state = next_state
-
+            
+            state = next_state
+            # print(state)
             self.draw()
             if not check_quit():
                 break
@@ -115,25 +116,13 @@ class Game:
         r = (hx == self.grid.x-1)
         u = (hy == 0)
         d = (hy == self.grid.y-1)
-
-        match self.agent.direction:
-            case Move.R: l = True
-            case Move.L: r = True
-            case Move.U: d = True
-            case Move.D: u = True
         
-        vx, vy = self.agent.direction.value
-        # print(f"{(hx+vx, hy+vy)}")
         for x, y in self.agent.body:
-            print(x, y, hx+vx, hy+vy)
-            if (hx+vx == x) and (hy+vy == y):
-                print("in")
-                match self.agent.direction:
-                    case Move.R: r = True
-                    case Move.L: l = True
-                    case Move.U: u = True
-                    case Move.D: d = True
-                break
+            match (x-hx, y-hy):
+                case Move.R.value: r = True
+                case Move.L.value: l = True
+                case Move.U.value: u = True
+                case Move.D.value: d = True
         
         state = [l, r, u, d, hx, hy, ax, ay]
         return np.array([state])
