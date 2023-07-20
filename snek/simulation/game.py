@@ -80,7 +80,7 @@ class Game:
                 reward = self.reward.reward
                 done = self.end_condition
                 next_state = self._generate_state()
-                print(f'state: {state} ---- done: {done} ---- reward: {reward}')
+                print(f'state: {state} ---- act: {action} ---- done: {done} ---- reward: {reward}')
                 self.agent.train(state, action, reward, next_state, done)
                 state = next_state
 
@@ -121,6 +121,19 @@ class Game:
             case Move.L: r = True
             case Move.U: d = True
             case Move.D: u = True
+        
+        vx, vy = self.agent.direction.value
+        # print(f"{(hx+vx, hy+vy)}")
+        for x, y in self.agent.body:
+            print(x, y, hx+vx, hy+vy)
+            if (hx+vx == x) and (hy+vy == y):
+                print("in")
+                match self.agent.direction:
+                    case Move.R: r = True
+                    case Move.L: l = True
+                    case Move.U: u = True
+                    case Move.D: d = True
+                break
         
         state = [l, r, u, d, hx, hy, ax, ay]
         return np.array([state])

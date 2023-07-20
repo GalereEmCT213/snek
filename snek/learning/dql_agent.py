@@ -60,7 +60,7 @@ class DQNAgent(Agent):
         history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
         # Keeping track of loss
         loss = history.history['loss'][0]
-        self.replay_buffer.clear()
+        # self.replay_buffer.clear()
         return loss
 
     def load(self, name):

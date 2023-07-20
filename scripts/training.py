@@ -13,7 +13,7 @@ gamma = 0.95
 batch_size = 32
 
 agent = DQNAgent(epsilon=0.9, state_size=(8,), action_size=4, gamma=gamma)
-grid = GridWall(x=10, y=10)
+grid = GridWall(x=20, y=20)
 game = Game(agent, grid, speed=150, manual_end=False)
 
 # if os.path.exists(f'{agent_name}.h5'):

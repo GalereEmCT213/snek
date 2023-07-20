@@ -13,7 +13,7 @@ class Reward:
         self.death_factor = -100
         self.apple_factor = 0
         self.tick_factor = 1
-        self.dist_factor = 0
+        self.dist_factor = -1
 
     def reward_engine(
             self,
@@ -44,10 +44,9 @@ class Reward:
             apple: tuple, 
             head: tuple) -> float:
         
-        apple = np.array(apple)
-        head = np.array(head)
-
-        return np.ceil(np.linalg.norm(apple-head)).astype('int')
+        ax, ay = apple
+        hx, hy = head
+        return np.abs(ax-hx) + np.abs(ay-hy)
     
     def init(self):
         self.reward = 0
