@@ -112,20 +112,62 @@ class Game:
 
     def _generate_state(self):
         ax, ay = self.apple
-        hx, hy =self.agent.body[0]
+        hx, hy = self.agent.body[0]
+        grid_x, grid_y = self.grid.x, self.grid.y
 
-        l = (hx == 0)
-        r = (hx == self.grid.x-1)
-        u = (hy == 0)
-        d = (hy == self.grid.y-1)
+        # Check position of apple relative to the snake:
+        apple_up = apple_down = apple_left = apple_right = 0
+
+        print('x', hx, ax, 'y', hy, ay)
+
+        apple_up = (hy > ay)
+        apple_down = (hy < ay)
+        apple_left = (hx > ax)
+        apple_right = (hx < ax)
+
+        # Check for walls:
+        wall_up = wall_down = wall_left = wall_right = 0
+
+        if hy == 0:
+            wall_up, wall_down = 1, 0
+        elif hy == grid_y - 1:
+            wall_up, wall_down = 0, 1
         
-        for x, y in self.agent.body:
-            match (x-hx, y-hy):
-                case Move.R.value: r = True
-                case Move.L.value: l = True
-                case Move.U.value: u = True
-                case Move.D.value: d = True
-        
-        state = [l, r, u, d, hx, hy, ax, ay]
+        if hx == 0: 
+            wall_left, wall_right = 1, 0
+        elif hx == grid_x - 1:
+            wall_left, wall_right = 0, 1
+
+        # Check for body:
+        body_up = body_down = body_left = body_right = 0
+
+        for body in list(self.agent.body)[3:]:
+            if (hy - body[1] <= 1 and hy > body[1] and hx == body[0]):
+                body_up, body_down = 1, 0
+            elif (body[1] - hy <= 1 and body[1] > hy and hx == body[0]):
+                body_up, body_down = 0, 1
+
+            if (hx - body[0] <= 1 and hx > body[0] and hy == body[1]):
+                body_left, body_right = 1, 0
+            elif (body[0] - hx <= 1 and body[0] > hx and hy == body[1]):
+                body_left, body_right = 0, 1
+
+        # Use wall and body check to check for obstacles nearby:
+        obstacle_up = wall_up or body_up
+        obstacle_down = wall_down or body_down
+        obstacle_left = wall_left or body_left
+        obstacle_right = wall_right or body_right
+
+        # Direction check:
+        direction_up = direction_down = direction_left = direction_right = 0
+
+        match self.agent.direction:
+            case Move.U: direction_up = 1
+            case Move.D: direction_down = 1
+            case Move.L: direction_left = 1
+            case Move.R: direction_right = 1
+ 
+        state = [apple_up, apple_down, apple_left, apple_right, \
+                 obstacle_up, obstacle_down, obstacle_left, obstacle_right, \
+                 direction_up, direction_down, direction_left, direction_right]
         return np.array([state])
-

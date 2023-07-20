@@ -12,7 +12,7 @@ epsilon = 0.1
 gamma = 0.95
 batch_size = 128
 
-agent = DQNAgent(epsilon=0, epsilon_min=0, state_size=(8,), action_size=4, gamma=gamma)
+agent = DQNAgent(epsilon=0, epsilon_min=0, state_size=(12,), action_size=4, gamma=gamma)
 grid = GridWall(x=20, y=20)
 game = Game(agent, grid, speed=150, manual_end=False)
 

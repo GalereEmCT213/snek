@@ -17,8 +17,8 @@ class DQNAgent(Agent):
             gamma=0.95,
             epsilon=0.5,
             epsilon_min=0.01,
-            epsilon_decay=0.98,
-            learning_rate=0.001,
+            epsilon_decay=0.995,
+            learning_rate=0.0005,
             buffer_size=4098,
             batch_size=32
         ):
@@ -84,7 +84,8 @@ class DQNAgent(Agent):
         actions = actions.reshape(-1)
         idx = np.argmax(actions)
         self.next_direction = self.moves[idx]
-        print(actions, idx, self.next_direction)
+        print(state)
+        # print(actions, idx, self.next_direction)
 
     def update(self, x: int, y: int, on_apple: bool) -> bool:
         # previous_state = (self.x, self.y, self.on_apple)

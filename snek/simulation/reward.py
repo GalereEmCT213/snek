@@ -34,7 +34,6 @@ class Reward:
         """
         head = snake_body[0]
         self.dist = self._dist_apple_head(apple_pos, head)
-        # print(f"dist: {self.dist} ====== apple: {apple_pos} ======= head: {head}")
         compare_dist = self._compare_distance(apple_pos, head)
         if not compare_dist:
             self.dist_factor = -1

@@ -8,13 +8,13 @@ from snek.simulation import GridLoop, Game, GridWall
 agent_name = 'burrice-artificial'
 fig_format = 'png'
 num_episodes = 1000
-epsilon = 0.25
+epsilon = 1
 gamma = 0.95
-batch_size = 32  # 128
+batch_size = 256  # 128
 grid_size_x = 20
 grid_size_y = 20
 
-agent = DQNAgent(epsilon=epsilon, state_size=(grid_size_x,grid_size_y,3), action_size=4, gamma=gamma)
+agent = DQNAgent(epsilon=epsilon, state_size=(12,), action_size=4, gamma=gamma)
 grid = GridWall(x=grid_size_x, y=grid_size_y)
 game = Game(agent, grid, speed=150, manual_end=False)
 
