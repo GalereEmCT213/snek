@@ -28,6 +28,7 @@ class Game:
         self.time = 0
         self.score = Score()
         self.cumulative_reward = 0
+        self.apple = (self.grid.xa, self.grid.ya)
 
         pygame.init()
         self.game_window = pygame.display.set_mode(self.window)
@@ -36,6 +37,7 @@ class Game:
         pygame.display.set_caption('snek')
 
     def update(self):
+        self.reward.old_pos = (self.agent.x, self.agent.y)
         x, y = self.agent.next_move()
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
@@ -94,7 +96,7 @@ class Game:
         if train:
             self.agent.update_epsilon()
 
-        return self.reward.reward, self.time
+        return self.reward.history, self.time
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)
