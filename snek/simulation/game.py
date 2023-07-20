@@ -95,7 +95,7 @@ class Game:
         if train:
             self.agent.update_epsilon()
 
-        return self.reward.reward, self.time
+        return self.reward.history, self.time
 
     def game_over(self):
         game_over_font = pygame.font.Font(None, 50)
