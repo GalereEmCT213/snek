@@ -13,7 +13,7 @@ class Reward:
         self.death_factor = -1000
         self.apple_factor = 100
         self.tick_factor = 1
-        self.dist_factor = 10
+        self.dist_factor = 1
 
     def reward_engine(
             self,
@@ -35,10 +35,7 @@ class Reward:
             head = snake_body[0]
             self.dist = self._dist_apple_head(apple_pos, head)
 
-        if self.dist != 0:
-            reward = self.death_factor*dead + self.tick_factor*tick + self.dist_factor/self.dist
-        else:
-            reward = self.apple_factor*appl + self.death_factor*dead + self.tick_factor*tick
+        reward = self.death_factor*dead + self.apple_factor*appl + self.tick_factor*tick - self.dist_factor*self.dist
         self.reward = reward
         self.history += reward
 
@@ -47,10 +44,10 @@ class Reward:
             apple: tuple, 
             head: tuple) -> float:
         
-        apple = np.array(apple)
-        head = np.array(head)
+        apple_x, apple_y = apple
+        head_x, head_y = head
 
-        return np.ceil(np.linalg.norm(apple-head)).astype('int')
+        return np.abs(apple_x - head_x) + np.abs(apple_y - head_y)
     
     def init(self):
         self.reward = 0
