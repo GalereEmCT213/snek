@@ -68,7 +68,7 @@ class Game:
 
 
     def play(self, train=False):
-        self.grid.init(self.agent.body)
+        self.init()
         state = self._generate_state()
 
         while not self.end_condition:
