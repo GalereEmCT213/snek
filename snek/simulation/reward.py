@@ -10,10 +10,11 @@ class Reward:
         """
         self.reward = 0
         self.history = 0
-        self.death_factor = -1000
-        self.apple_factor = 100
+        self.death_factor = -100
+        self.apple_factor = 10
         self.tick_factor = 1
-        self.dist_factor = 10
+        self.dist_factor = 1
+        self.old_pos = (0,0)
 
     def reward_engine(
             self,
@@ -31,14 +32,19 @@ class Reward:
         :param score_time: the time that has passed
         :param dead: indicates if the snake is still alive 
         """
-        if apple_pos is not None and snake_body is not None:
-            head = snake_body[0]
-            self.dist = self._dist_apple_head(apple_pos, head)
-
-        if self.dist != 0:
-            reward = self.death_factor*dead + self.tick_factor*tick + self.dist_factor/self.dist
+        head = snake_body[0]
+        self.dist = self._dist_apple_head(apple_pos, head)
+        # print(f"dist: {self.dist} ====== apple: {apple_pos} ======= head: {head}")
+        compare_dist = self._compare_distance(apple_pos, head)
+        if not compare_dist:
+            self.dist_factor = -1
         else:
-            reward = self.apple_factor*appl + self.death_factor*dead + self.tick_factor*tick
+            self.dist_factor = 1
+        reward = self.apple_factor*appl + self.death_factor*dead + self.dist_factor
+        # + self.tick_factor*tick 
+        # if self.dist != 0:
+        #     reward += self.dist_factor/self.dist
+
         self.reward = reward
         self.history += reward
 
@@ -47,10 +53,18 @@ class Reward:
             apple: tuple, 
             head: tuple) -> float:
         
-        apple = np.array(apple)
-        head = np.array(head)
+        xa, ya = apple
+        xh, yh = head
 
-        return np.ceil(np.linalg.norm(apple-head)).astype('int')
+        return np.abs(xa-xh) + np.abs(ya-yh)
+    
+    def _compare_distance(
+            self,
+            apple: tuple,
+            new_pos: tuple):
+        old_dist = self._dist_apple_head(apple, self.old_pos)
+        new_dist = self._dist_apple_head(apple, new_pos)
+        return old_dist > new_dist # True for closer
     
     def init(self):
         self.reward = 0
