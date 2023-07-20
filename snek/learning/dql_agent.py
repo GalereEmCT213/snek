@@ -39,10 +39,10 @@ class DQNAgent(Agent):
         model = Sequential([
             layers.Conv2D(filters=16, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
             layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)),
-            layers.Conv2D(filters=32, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu, input_shape=self.state_size),
+            layers.Conv2D(filters=32, kernel_size=(4, 4), strides=(2, 2), activation=activations.relu),
             layers.Flatten(),
             layers.Dense(128, activation=activations.relu),
-            layers.Dense(self.action_size, activation=activations.softmax),
+            layers.Dense(self.action_size, activation=activations.linear),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
         model.summary()

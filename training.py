@@ -33,11 +33,11 @@ for episodes in range(1, num_episodes+1):
     print(f'episode: {episodes}, time: {time}, score: {score}')
 
     game.agent.update_epsilon()
-    # if episodes % 20 == 0:
+    if episodes % 20 == 0:
     #     plt.plot(return_history, 'b')
     #     plt.xlabel('Episode')
     #     plt.ylabel('Return')
     #     plt.show(block=False)
     #     plt.pause(0.1)
     #     plt.savefig(f'dqn_training.{fig_format}', format=fig_format)
-    #     agent.save(f'{agent_name}.h5')
+        agent.save(f'{agent_name}.h5')
