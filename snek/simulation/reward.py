@@ -47,7 +47,6 @@ class Reward:
         apple_x, apple_y = apple
         head_x, head_y = head
         distance = np.abs(apple_x - head_x) + np.abs(apple_y - head_y)
-        print(distance)
 
         return distance
     
