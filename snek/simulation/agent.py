@@ -6,7 +6,13 @@ from snek.simulation.consts import Move
 
 
 class Agent:
-    def __init__(self, x: int = 0, y: int = 0, direction: Move = Move.R, initial_size: int = 5, gamma: float = 0.9):
+    def __init__(
+            self, 
+            x: int = 0, 
+            y: int = 0, 
+            direction: Move = Move.R, 
+            initial_size: int = 5, 
+            gamma: float = 0.9):
         self.initial_size = initial_size
         self.x, self.y = x, y
         self.body = deque((x + i, y + 5) for i in reversed(range(initial_size)))
@@ -17,7 +23,11 @@ class Agent:
         self.next_direction = direction
         self.gamma = gamma
 
-    def update(self, x: int, y: int, on_apple: bool) -> bool:
+    def update(
+            self, 
+            x: int, 
+            y: int, 
+            on_apple: bool) -> bool:
         """Update position.
 
         Updates the agent position based on the interaction with world. Updates both body position and sprites.
@@ -30,7 +40,7 @@ class Agent:
         self.body.appendleft((x, y))
         self.sprites.appendleft(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y))
 
-        return self.body[0] in list(self.body)[1:]  # Memory usage?
+        return self.body[0] in list(self.body)[1:] 
 
     def validate_next_move(self) -> bool:
         match self.direction:
@@ -69,7 +79,11 @@ class Agent:
 
 
 class RandomAgent(Agent):
-    def __init__(self, *args, epsilon: float = 0.1, **kwargs):
+    def __init__(
+            self, 
+            *args, 
+            epsilon: float = 0.1, 
+            **kwargs):
         self.epsilon = epsilon
         super().__init__(*args, **kwargs)
 
