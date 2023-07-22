@@ -2,7 +2,7 @@ import random
 import pygame
 from collections import deque
 
-
+# Base game grid class
 class Grid:
     def __init__(self, x: int = 50, y: int = 50):
         self.x = x
@@ -18,7 +18,7 @@ class Grid:
         """
         Generates a new position for the apple on the grid 
 
-        :param body: grid's positions ocupied by the snake
+        :param body: grid's positions occupied by the snake
         :return xa, ya: new apple position on the grid
         """
         drop_set = set(body)
@@ -36,8 +36,16 @@ class Grid:
             x: int, 
             y: int) -> bool:
         """
-        Check if thre given position is the same
+        Check if the given position is the same
         of the apple in the grid
+
+        :param x: x coordinate of snake
+        :type x: int
+        :param y: y coordinate of snake
+        :type y: int
+
+        :return: condition if snake is on apple
+        :type return: bool
         """
         return x == self.xa and y == self.ya
 
@@ -47,6 +55,9 @@ class Grid:
         """
         Re-start the grid by creating a new position 
         for the apple
+
+        :param agent_body: positions occupied by the snake's body
+        :type agent_body: deque of int tuples
         """
         return self.generate_apple(agent_body)
     
@@ -55,6 +66,7 @@ class Grid:
         raise NotImplementedError
 
 
+# Inherited Grid class, where walls are obstacles
 class GridWall(Grid):
     """
     Defines a grid with blocked walls
@@ -66,6 +78,7 @@ class GridWall(Grid):
         return x, y, on_apple
 
 
+# Inherited Grid class, where walls loop the agent to the other side
 class GridLoop(Grid):
     """
     Defines a grid with infinite walls

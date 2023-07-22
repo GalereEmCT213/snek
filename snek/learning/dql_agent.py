@@ -9,6 +9,7 @@ from tensorflow.keras.models import Sequential
 from snek.simulation.agent import Agent
 from snek.simulation.consts import Move
 
+# Inherited Deep Q Agent
 class DQNAgent(Agent):
     def __init__(
             self,
@@ -37,19 +38,25 @@ class DQNAgent(Agent):
     
     def make_model(self):
         """
-        Creates the neural network model the off-policy training.
+        Creates the neural network model with off-policy training.
         The NN calculates the next state.
         """
         model = Sequential([
             layers.Dense(128, activation=activations.relu, input_shape=self.state_size),
             layers.Dense(128, activation=activations.relu),
             layers.Dense(128, activation=activations.relu),
-            layers.Dense(self.action_size, activation=activations.softmax),
+            layers.Dense(self.action_size, activation=activations.linear),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
         return model
 
     def replay(self, batch_size):
+        """Episode replay for Q Learning
+        
+        :type batch_size: int
+        """
+        
+        # Do not replay until buffer is full
         if len(self.replay_buffer) < batch_size:
             return
         
@@ -73,17 +80,27 @@ class DQNAgent(Agent):
         self.model.fit(states, current_targets, epochs=1, verbose=0)
 
     def load(self, name):
+        """Load previously trained model."""
         self.model.load_weights(name)
 
     def save(self, name):
+        """Save model weights"""
         self.model.save_weights(name)
 
     def update_epsilon(self):
+        """Epsilon scheduling, until minimum epsilon is reached"""
         self.epsilon *= self.epsilon_decay
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
 
     def interact(self, state):
+        """
+        Interact with game, changing direction based on learned policy.
+        Epsilon is set in order to enable exploration.
+
+        :param state: state vector with 12 features
+        :type state: np array
+        """
         if np.random.rand() < self.epsilon:
             self.next_direction = self.moves[random.randrange(self.action_size)]
             return
@@ -94,13 +111,12 @@ class DQNAgent(Agent):
         self.next_direction = self.moves[idx]
 
     def update(self, x: int, y: int, on_apple: bool) -> bool:
+        """Update agent position."""
         game_over = super().update(x, y, on_apple)
         return game_over
 
-        # Change state (x, y, on_apple) to state properly
-        # 
-
     def train(self, state, action, reward, next_state, done):
+        """Train agent using episode replay."""
         self.replay_buffer.append((state, action, reward, next_state, done))
         if len(self.replay_buffer) > 2 * self.batch_size:
             self.replay(self.batch_size)

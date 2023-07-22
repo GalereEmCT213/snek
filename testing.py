@@ -43,6 +43,8 @@ for episodes in range(1, num_episodes+1):
     score_history.append(game._get_game_score())
 
     game.agent.update_epsilon()
+
+    # Plot results
     if episodes % 5 == 0:
         plt.subplot(211)
         plt.plot(reward_history, 'b')

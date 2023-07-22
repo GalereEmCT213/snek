@@ -53,7 +53,7 @@ Although Atari was high popular for Millennials and Gen X, the early Gen Z are m
    \centering
 %    \framebox{\parbox{3in}{We suggest that you use a text box to insert a graphic (which is ideally a 300 dpi TIFF or EPS file, with all fonts embedded) because, in an document, this method is somewhat more stable than directly inserting a picture.
 % }}
-   \includegraphics[scale=0.5]{snake-2.png}
+   \includegraphics[scale=0.8]{snake-2.png}
    \caption{Snake game from a $20\times20$ grid wall. The main goal for the snake is to eat the apples without eating itself.}
    \label{snake-game}
 \end{figure}
@@ -119,9 +119,26 @@ We utilized the Keras framework to implement a deep neural network model designe
     \end{tabular}
 \end{table}
 
+The agent's state at each instant is represented by a state vector containing 12 boolean variables and serves as the input to the neural network. The first four variables indicate the relative position of the apple to the snake's head (above, below, left, or right). The following four variables describe the presence of an imminent obstacle in relation to the snake's head (above, below, left, or right). Finally, the last four variables specify the snake's current direction (up, down, left, or right). 
+
 Activation functions were chosen in as reported by literature as good choices for the task at hand. The ReLu function is a non-linear function that is easy to compute and has a derivative that is easy to compute. For the output layer, it was chosen the Linear function, instead of Sigmoid function, since the model output has to estimate $Q(S,A)$.
 
-The agent's state at each instant is represented by a state vector containing 12 boolean variables. The first four variables indicate the relative position of the apple to the snake's head (above, below, left, or right). The following four variables describe the presence of an imminent obstacle in relation to the snake's head (above, below, left, or right). Finally, the last four variables specify the snake's current direction (up, down, left, or right). This vector serves as the input to the neural network.
+
+\subsection{Reward Engineering}
+
+In a Deep Q Learning model, the reward mechanism is very important, since it is used to evaluate the agent actions'. Nevertheless, in the case of the snake game, the agent is only rewarded when it catches the apple, so it has no intermediary stimulus to explore the space more efficiently. Then, the reward engineering is required to establish middlemen rewards until the target is attained.
+
+We proposed a reward engineering based on rewarding for catching apple and moving in the direction of the apple, and punishing for dying and getting away from the apple. The values for each recompense is presented in Table \ref{tab:rewards}.
+
+\begin{table}[h]
+    \centering
+    \label{tab:NNarchtecture}
+    \caption{Reward engineering schema}
+    \begin{tabular}{cc} 
+        \toprule % Top horizontal line
+
+    \end{tabular}
+\end{table}
 
 
 \section{CONCLUSIONS}
@@ -131,7 +148,9 @@ In this paper, it was possible to explore Deep Q-Learning algorithm and its appl
 Obviously, for such small state space, it would be possible to implement a Q-Learning algorithm directly, without the need of a neural network. However, the main goal of this work was to explore the Deep Q-Learning algorithm, and not to implement a Snake game solver. Indeed, the sequential model was able to converge and learn how to play the snake game after a couple iterations in a reward engineering process. So, we can conclude that the Deep Q-Learning algorithm is a good choice for this kind of problem, and can be used to teach a snake how to eat apples.
 
 \begin{thebibliography}{99}
-\bibitem{Sebastianelli} A. Sebastianelli, M. Tipaldi, S. L. Ullo and L. Glielmo, "A Deep Q-Learning based approach applied to the Snake game," 2021 29th Mediterranean Conference on Control and Automation (MED), PUGLIA, Italy, 2021.
+   \bibitem{DeepMind} Mnih V. \textit{et al.}, "Playing Atari with Deep Reinforcement Learning," in \textit{arXiv:1312.5602 [cs.LG]}, 2013.
+
+   \bibitem{Sebastianelli} A. Sebastianelli, M. Tipaldi, S. L. Ullo and L. Glielmo, "A Deep Q-Learning based approach applied to the Snake game," 2021 29th Mediterranean Conference on Control and Automation (MED), PUGLIA, Italy, 2021.
 
 \end{thebibliography}
 

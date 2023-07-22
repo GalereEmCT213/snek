@@ -1,6 +1,7 @@
 import numpy as np
 from collections import deque
 
+# Class for computing rewards and implementing reward engineering
 class Reward:
     
     def __init__(self) -> None:

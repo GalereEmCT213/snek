@@ -2,13 +2,15 @@ import pygame
 
 from snek.simulation.consts import Color
 
+# Class in charge of tallying game score (based on number of apples)
 class Score:
     def __init__(self, apple_score: int = 10):
         """
         Measures the number of points get 
         for eating apples.
 
-        :param spple_score: points by each apple
+        :param apple_score: points by each apple
+        :type apple_score: int
         """
         self.apple_score = apple_score
         self.score = 0
@@ -22,6 +24,9 @@ class Score:
     def display(self, game_window):
         """
         Print the score on the screen
+
+        :param game_window: pygame game window object
+        :type game_window: pygame Surface
         """
         score_font = pygame.font.Font(None, 30)
         score_surface = score_font.render(f'SCORE: {self.score:.0f}', True, Color.YELLOW.value)

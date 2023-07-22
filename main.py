@@ -12,5 +12,5 @@ if __name__ == '__main__':
     random_game = Game(agent, grid, speed=150, manual_end=False)
 
     # Change these lines
-    random_game.play()
-    # normal_game.play()
+    # random_game.play()
+    normal_game.play()

@@ -4,11 +4,11 @@ import random
 
 from snek.simulation.consts import Move
 
-
+# Base Snake-Playing Agent Class
 class Agent:
     def __init__(
             self, 
-            x: int = 0, 
+            x: int = 0,
             y: int = 0, 
             direction: Move = Move.R, 
             initial_size: int = 5, 
@@ -31,6 +31,9 @@ class Agent:
         """Update position.
 
         Updates the agent position based on the interaction with world. Updates both body position and sprites.
+
+        :return: check if snake head has collided with body
+        :type return: bool
         """
         if not on_apple:
             self.body.pop()
@@ -43,6 +46,10 @@ class Agent:
         return self.body[0] in list(self.body)[1:] 
 
     def validate_next_move(self) -> bool:
+        """Validate next move, by forbidding snake from moving backwards.
+        
+        :type return: bool
+        """
         match self.direction:
             case Move.R: return self.next_direction != Move.L
             case Move.L: return self.next_direction != Move.R
@@ -51,7 +58,11 @@ class Agent:
         return True
 
     def next_move(self) -> tuple[int, int]:
-        """Agent next move based on direction and location."""
+        """Agent next move based on direction and location.
+        
+        :return: new position coordinates
+        :type return: tuple of int
+        """
         if self.validate_next_move():
             self.direction = self.next_direction
 
@@ -61,6 +72,8 @@ class Agent:
         return x+vx, y+vy
 
     def init(self, x, y):
+        """Restarts snake for new game."""
+        
         self.x, self.y = x, y
         self.direction = self.initial_direction
         self.next_direction = self.initial_direction
@@ -72,11 +85,15 @@ class Agent:
         raise NotImplementedError
 
     def train(self, state, action, reward, next_state, done):
+        """Method for training the agent"""
         raise NotImplementedError
 
     def update_epsilon(self):
+        """Method for epsilon scheduling"""
         raise NotImplementedError
 
+
+# Inherited Agent class, with random direction policy
 
 class RandomAgent(Agent):
     def __init__(
@@ -88,12 +105,15 @@ class RandomAgent(Agent):
         super().__init__(*args, **kwargs)
 
     def interact(self, state):
+        """Interact with game, changing direction at random."""
         if random.random() < self.epsilon:
             self.next_direction = random.choice([Move.L, Move.R, Move.D, Move.U])
 
 
+# Inherited Agent class, with directions set by user
 class PlayerAgent(Agent):
     def interact(self, state):
+        """Interact with game, by getting user input."""
         for event in pygame.event.get(eventtype=pygame.KEYDOWN):
             match event.key:
                 case pygame.K_UP:

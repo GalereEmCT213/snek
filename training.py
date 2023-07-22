@@ -15,7 +15,7 @@ grid_size_x = 20
 grid_size_y = 20
 
 #############################
-## Set up a test execution ##
+##     Set up training     ##
 #############################
 train = True
 

@@ -9,12 +9,16 @@ from snek.simulation.reward import Reward
 
 
 def check_quit() -> bool:
+    """
+    Checks whether user has exited game
+    """
     if pygame.event.get(eventtype=pygame.QUIT):
         pygame.quit()
         return False
     return True
 
 
+# Snake Game class
 class Game:
     def __init__(
             self, 
@@ -27,7 +31,7 @@ class Game:
         Creates a game.
 
         :param speed: speed of the game execution
-        :param manual_end: flag to control if the window will be maually closed
+        :param manual_end: flag to control if the window will be manually closed
         :param reward: reward engine, used for DQLearning
         :type reward: Reward
 
@@ -35,8 +39,8 @@ class Game:
         :type end_condition: bool
         :param time: count the ticks of game
         :type time: int
-        :param score: enigne to mark the eaten apples
-        :typer score: Score
+        :param score: engine to mark the eaten apples
+        :type score: Score
         """
         self.agent = agent
         self.grid = grid
@@ -62,7 +66,9 @@ class Game:
         Update the agent and the grid state in the game.
         Also measure the reward with the reward engine.
         """
-        self.reward.old_pos = (self.agent.x, self.agent.y)
+        # Save position before update in order to measure whether agent is getting closer
+        # or farther from the apple, for reward calculations
+        self.reward.old_pos = (self.agent.x, self.agent.y) 
         x, y = self.agent.next_move()
         x, y, on_apple = self.grid.interact(x, y)
         if on_apple:
@@ -145,8 +151,8 @@ class Game:
 
     def game_over(self):
         """
-        Print the Game Over advisement and quit the pygame 
-        enviroment when the manual session end is settled
+        Print the Game Over message and quit the pygame 
+        enviroment when the manual session end is set
         """
         game_over_font = pygame.font.Font(None, 20)
         game_over_surface = game_over_font.render('Git Gud', True, Color.WHITE.value)
@@ -162,10 +168,13 @@ class Game:
     def _generate_state(self):
         """
         Generates the state vector based on actual game situation
+
+        :return: state vector with 12 features
+        :type return: np array
         """
         ax, ay = self.apple
-        hx, hy = self.agent.body[0]
-        grid_x, grid_y = self.grid.x, self.grid.y
+        hx, hy = self.agent.body[0]                     # Snake head coordinates
+        grid_x, grid_y = self.grid.x, self.grid.y       # Grid size
 
         # Check position of apple relative to the snake:
         apple_up = apple_down = apple_left = apple_right = 0
@@ -175,7 +184,7 @@ class Game:
         apple_left = hx > ax
         apple_right = hx < ax
 
-        # Check for walls:
+        # Check for imminent walls:
         wall_up = wall_down = wall_left = wall_right = 0
 
         if hy == 0:
@@ -188,9 +197,10 @@ class Game:
         elif hx == grid_x - 1:
             wall_left, wall_right = 0, 1
 
-        # Check for body:
+        # Check for nearby body positions:
         body_up = body_down = body_left = body_right = 0
 
+        # For each direction, check if there is a body piece nearby (other than the one right after the head)
         for body in list(self.agent.body)[3:]:
             if (hy - body[1] <= 1 and hy > body[1] and hx == body[0]):
                 body_up, body_down = 1, 0
