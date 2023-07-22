@@ -1,56 +1,34 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%2345678901234567890123456789012345678901234567890123456789012345678901234567890
-%        1         2         3         4         5         6         7         8
-
-\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
-
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
-
-\IEEEoverridecommandlockouts                              % This command is only needed if 
-                                                          % you want to use the \thanks command
-
-\overrideIEEEmargins                                      % Needed to meet printer requirements.
-
-%In case you encounter the following error:
-%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
-%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
-%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
-%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
-%\pdfobjcompresslevel=0
-%\pdfminorversion=4
-
-% See the \addtolength command later in the file to balance the column lengths
-% on the last page of the document
-
-% The following packages can be found on http:\\www.ctan.org
+\documentclass[conference]{IEEEtran}
+% \IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
 \usepackage{graphicx}
-\usepackage{graphics} % for pdf, bitmapped graphics files
-%\usepackage{epsfig} % for postscript graphics files
-%\usepackage{mathptmx} % assumes new font selection scheme installed
-%\usepackage{times} % assumes new font selection scheme installed
-%\usepackage{amsmath} % assumes amsmath package installed
-%\usepackage{amssymb}  % assumes amsmath package installed
-
-\title{\LARGE \bf
-Development of Deep Q-Learning Agent for Playing the Game of Snake
-}
-
-
-\author{Guilherme G. Kowalczuk$^{1}$, Jian L. B. Veras$^{2}$ and Rina C. Carvalho$^{3}$% <-this % stops a space
-\thanks{*This work was not supported by any organization}% <-this % stops a space
-\thanks{$^{1}$ {\tt\small guilherme.kowalczuk@ga.ita.br}}%
-\thanks{$^{2}$ {\tt\small jian.veras@ga.ita.br}}%
-\thanks{$^{3}$ {\tt\small rina.carvalho@ga.ita.br}}%
-}
-
-
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-
+\title{Development of Deep Q-Learning Agent for Playing the Game of Snake}
+\author{\IEEEauthorblockN{1\textsuperscript{st} Guilherme G. Kowalczuk}
+\IEEEauthorblockA{\textit{Instituto Tecnológico de Aeronáutica}\\
+São José dos Campos, Brazil\\
+guilherme.kowalczuk@ga.ita.br}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Jian L. B. Veras}
+\IEEEauthorblockA{\textit{Instituto Tecnológico de Aeronáutica}\\
+São José dos Campos, Brazil\\
+jian.veras@ga.ita.br}
+\and
+\IEEEauthorblockN{3\textsuperscript{rd} Rina C. Carvalho}
+\IEEEauthorblockA{\textit{Instituto Tecnológico de Aeronáutica}\\
+São José dos Campos, Brazil\\
+rina.carvalho@ga.ita.br}
+}
 
 \maketitle
-\thispagestyle{empty}
-\pagestyle{empty}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,7 +59,9 @@ Although Atari was high popular for Millennials and Gen X, the early Gen Z are m
 
 In this work, we present the implementation of an agent for the game of Snake using the Deep Q-Learning framework adopted by DeepMind. The main goal is to set up an simulation of the game and train an agent to play it. We present two forms for a state representation and discuss the results obtained by the agent.
 
-\section{Theory}
+\section{DEEP Q-LEARNING}
+
+The Deep Q-Learning algorithm is a combination of Q-Learning and Deep Neural Networks (DNN). Q-Learning is a model-free RL algorithm that learns a policy by directly approximating the optimal action-value function $Q^*(s,a)$, which is the expected return for taking action $a$ in state $s$ and following the optimal policy thereafter. This is necessary because the problem may have too much states, so it's impossible (or really inefficient) to store the action-value function for all discrete state space.
 
 \section{METHODOLOGY}
 
