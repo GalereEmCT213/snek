@@ -67,7 +67,7 @@ class DQNAgent(Agent):
         targets = rewards + self.gamma * np.amax(self.model.predict_on_batch(next_states), axis=1) * (1-dones)
         current_targets = self.model.predict_on_batch(states)
 
-        idx = np.array([i for i in range(batch_size)])
+        idx = np.array(list(range(batch_size)))
         current_targets[[idx], [actions_idx]] = targets
 
         self.model.fit(states, current_targets, epochs=1, verbose=0)

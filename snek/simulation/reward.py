@@ -41,6 +41,7 @@ class Reward:
             self.dist_factor = 1
 
         reward = self.apple_factor*appl + self.death_factor*dead + self.dist_factor
+        reward += self.tick_factor*tick
         self.reward = reward
         self.history += reward
 

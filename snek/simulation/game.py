@@ -69,7 +69,13 @@ class Game:
             self.apple = self.grid.generate_apple(self.agent.body)
             self.score.prize()
         self.end_condition = self.agent.update(x, y, on_apple)
-        self.reward.reward_engine(tick=True, dead=self.end_condition, appl=on_apple, snake_body=self.agent.body, apple_pos=self.apple)
+        self.reward.reward_engine(
+            tick=True,
+            dead=self.end_condition,
+            appl=on_apple,
+            snake_body=self.agent.body,
+            apple_pos=self.apple
+        )
         self.cumulative_reward = self.agent.gamma * self.cumulative_reward + self.reward.reward
 
     def draw(self):
@@ -164,10 +170,10 @@ class Game:
         # Check position of apple relative to the snake:
         apple_up = apple_down = apple_left = apple_right = 0
 
-        apple_up = (hy > ay)
-        apple_down = (hy < ay)
-        apple_left = (hx > ax)
-        apple_right = (hx < ax)
+        apple_up = hy > ay
+        apple_down = hy < ay
+        apple_left = hx > ax
+        apple_right = hx < ax
 
         # Check for walls:
         wall_up = wall_down = wall_left = wall_right = 0
