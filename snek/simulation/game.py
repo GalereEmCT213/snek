@@ -16,15 +16,36 @@ def check_quit() -> bool:
 
 
 class Game:
-    def __init__(self, agent: Agent, grid: Grid, reward: Reward = Reward(), speed=15, manual_end=False):
+    def __init__(
+            self, 
+            agent: Agent, 
+            grid: Grid, 
+            reward: Reward = Reward(), 
+            speed: int =15, 
+            manual_end: bool = False):
+        """
+        Creates a game.
+
+        :param speed: speed of the game execution
+        :param manual_end: flag to control if the window will be maually closed
+        :param reward: reward engine, used for DQLearning
+        :type reward: Reward
+
+        :param end_condition: control game regulation
+        :type end_condition: bool
+        :param time: count the ticks of game
+        :type time: int
+        :param score: enigne to mark the eaten apples
+        :typer score: Score
+        """
         self.agent = agent
         self.grid = grid
         self.reward = reward
-        self.window = (agent.size_x*grid.x, agent.size_y*grid.y)
         self.speed = speed
+        self.manual_end = manual_end
+        self.window = (agent.size_x*grid.x, agent.size_y*grid.y)
         self.background = Color.BLACK
         self.end_condition = False
-        self.manual_end = manual_end
         self.time = 0
         self.score = Score()
         self.cumulative_reward = 0
@@ -37,6 +58,10 @@ class Game:
         pygame.display.set_caption('snek')
 
     def update(self):
+        """
+        Update the agent and the grid state in the game.
+        Also measure the reward with the reward engine.
+        """
         self.reward.old_pos = (self.agent.x, self.agent.y)
         x, y = self.agent.next_move()
         x, y, on_apple = self.grid.interact(x, y)
@@ -48,6 +73,9 @@ class Game:
         self.cumulative_reward = self.agent.gamma * self.cumulative_reward + self.reward.reward
 
     def draw(self):
+        """
+        Draw the objects in the game's window
+        """
         pygame.event.pump()
         self.game_window.fill(Color.BLACK.value)
         pygame.draw.rect(self.game_window, Color.RED.value, self.grid.apple)
@@ -59,17 +87,30 @@ class Game:
         self.time += 1
 
     def init(self):
+        """
+        Re-start the game configuration
+        """
         self.agent.init(x=0, y=0)
         self.grid.init(self.agent.body)
-        self.reward.init()
         self.time = 0
         self.cumulative_reward = 0
         self.end_condition = False
-        self.score = Score()
+        self.reward.init()
+        self.score.init()
         self.apple = (self.grid.xa, self.grid.ya)
 
 
     def play(self, train=False):
+        """
+        Executes a game session
+
+        :param train: states if the session is for training
+
+        :return self.reward.history: reward sum of a game session
+        :type self.reward.history: float
+        :return self.time: cumulative time of a gam session
+        :type self.time: int
+        """
         self.init()
         state = self._generate_state()
 
@@ -82,11 +123,9 @@ class Game:
                 action = self.agent.direction
                 reward = self.reward.reward
                 done = self.end_condition
-                # print(f'state: {state} ---- act: {action} ---- done: {done} ---- reward: {reward}')
                 self.agent.train(state, action, reward, next_state, done)
             
             state = next_state
-            # print(state)
             self.draw()
             if not check_quit():
                 break
@@ -99,6 +138,10 @@ class Game:
         return self.reward.history, self.time
 
     def game_over(self):
+        """
+        Print the Game Over advisement and quit the pygame 
+        enviroment when the manual session end is settled
+        """
         game_over_font = pygame.font.Font(None, 20)
         game_over_surface = game_over_font.render('Git Gud', True, Color.WHITE.value)
         game_over_rect = game_over_surface.get_rect(topleft = (0,35))
@@ -111,14 +154,15 @@ class Game:
             pygame.quit()
 
     def _generate_state(self):
+        """
+        Generates the state vector based on actual game situation
+        """
         ax, ay = self.apple
         hx, hy = self.agent.body[0]
         grid_x, grid_y = self.grid.x, self.grid.y
 
         # Check position of apple relative to the snake:
         apple_up = apple_down = apple_left = apple_right = 0
-
-        # print('x', hx, ax, 'y', hy, ay)
 
         apple_up = (hy > ay)
         apple_down = (hy < ay)
@@ -171,3 +215,9 @@ class Game:
                  obstacle_up, obstacle_down, obstacle_left, obstacle_right, \
                  direction_up, direction_down, direction_left, direction_right]
         return np.array([state])
+    
+    def _get_game_score(self):
+        """
+        Get game score when it is called
+        """
+        return self.score.score

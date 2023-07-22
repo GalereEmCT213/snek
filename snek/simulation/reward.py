@@ -48,7 +48,17 @@ class Reward:
             self,
             apple: tuple, 
             head: tuple) -> float:
-        
+        """
+        Calculates the manhattan distance between
+        the snake's head and the apple
+
+        :param apple: apple position on the grid
+        :type apple: tuple of int
+        :param head: snake's head position on the grid
+        :type head: tuple of int
+        :return: distance
+        :type return: float
+        """
         xa, ya = apple
         xh, yh = head
 
@@ -58,10 +68,17 @@ class Reward:
             self,
             apple: tuple,
             new_pos: tuple):
+        """
+        Compare if the snake's head gets closer or gets away
+        from the apple
+        """
         old_dist = self._dist_apple_head(apple, self.old_pos)
         new_dist = self._dist_apple_head(apple, new_pos)
         return old_dist > new_dist # True if closer
     
     def init(self):
+        """
+        Re-start the reward configuration
+        """
         self.reward = 0
         self.history = 0

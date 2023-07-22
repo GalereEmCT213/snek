@@ -12,7 +12,15 @@ class Grid:
         self.ya = random.randint(0, self.y)
         self.apple = pygame.Rect(self.apple_size * self.xa, self.apple_size * self.ya, self.apple_size, self.apple_size)
     
-    def generate_apple(self, body: deque[tuple[int, int]]):
+    def generate_apple(
+            self, 
+            body: deque[tuple[int, int]]):
+        """
+        Generates a new position for the apple on the grid 
+
+        :param body: grid's positions ocupied by the snake
+        :return xa, ya: new apple position on the grid
+        """
         drop_set = set(body)
         positions = {(x, y) for x in range(self.x) for y in range(self.y)}
         available_positions = positions - drop_set
@@ -23,10 +31,23 @@ class Grid:
         
         return self.xa, self.ya
 
-    def check_apple(self, x: int, y: int) -> bool:
+    def check_apple(
+            self, 
+            x: int, 
+            y: int) -> bool:
+        """
+        Check if thre given position is the same
+        of the apple in the grid
+        """
         return x == self.xa and y == self.ya
 
-    def init(self, agent_body: deque[tuple[int, int]]):
+    def init(
+            self, 
+            agent_body: deque[tuple[int, int]]):
+        """
+        Re-start the grid by creating a new position 
+        for the apple
+        """
         return self.generate_apple(agent_body)
     
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
@@ -35,6 +56,9 @@ class Grid:
 
 
 class GridWall(Grid):
+    """
+    Defines a grid with blocked walls
+    """
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         x = min(max(x, 0), self.x-1)
         y = min(max(y, 0), self.y-1)
@@ -43,6 +67,9 @@ class GridWall(Grid):
 
 
 class GridLoop(Grid):
+    """
+    Defines a grid with infinite walls
+    """
     def interact(self, x: int, y: int) -> tuple[int, int, bool]:
         x %= self.x
         y %= self.y

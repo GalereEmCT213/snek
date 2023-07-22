@@ -36,32 +36,41 @@ class DQNAgent(Agent):
         super().__init__()
     
     def make_model(self):
+        """
+        Creates the neural network model the off-policy training.
+        The NN calculates the next state.
+        """
         model = Sequential([
-            layers.Dense(256, activation=activations.relu, input_shape=self.state_size),
-            layers.Dense(self.action_size, activation=activations.linear),
+            layers.Dense(128, activation=activations.relu, input_shape=self.state_size),
+            layers.Dense(128, activation=activations.relu),
+            layers.Dense(128, activation=activations.relu),
+            layers.Dense(self.action_size, activation=activations.softmax),
         ], name='dqn-agent')
         model.compile(loss=losses.mse, optimizer=optimizers.legacy.Adam(learning_rate=self.learning_rate))
-        model.summary()
         return model
 
     def replay(self, batch_size):
+        if len(self.replay_buffer) < batch_size:
+            return
+        
         minibatch = random.sample(self.replay_buffer, batch_size)
-        states, targets = [], []
-        for state, action, reward, next_state, done in minibatch:
-            target = self.model.predict(state, verbose=0)
-            action_idx = self.moves.index(action)
-            if not done:
-                target[0][action_idx] = reward + self.gamma * np.max(self.model.predict(next_state, verbose=0)[0])
-            else:
-                target[0][action_idx] = reward
-            # Filtering out states and targets for training
-            states.append(state[0])
-            targets.append(target[0])
-        history = self.model.fit(np.array(states), np.array(targets), epochs=1, verbose=0)
-        # Keeping track of loss
-        loss = history.history['loss'][0]
-        self.replay_buffer.clear()
-        return loss
+        states = np.array([sample[0] for sample in minibatch])
+        actions = np.array([sample[1] for sample in minibatch])
+        actions_idx = np.array([self.moves.index(action) for action in actions])
+        rewards = np.array([sample[2] for sample in minibatch])
+        next_states = np.array([sample[3] for sample in minibatch])
+        dones = np.array([sample[4] for sample in minibatch])
+
+        states = np.squeeze(states)
+        next_states = np.squeeze(next_states)
+
+        targets = rewards + self.gamma * np.amax(self.model.predict_on_batch(next_states), axis=1) * (1-dones)
+        current_targets = self.model.predict_on_batch(states)
+
+        idx = np.array([i for i in range(batch_size)])
+        current_targets[[idx], [actions_idx]] = targets
+
+        self.model.fit(states, current_targets, epochs=1, verbose=0)
 
     def load(self, name):
         self.model.load_weights(name)
@@ -73,7 +82,6 @@ class DQNAgent(Agent):
         self.epsilon *= self.epsilon_decay
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
-        # print(self.epsilon)
 
     def interact(self, state):
         if np.random.rand() < self.epsilon:
@@ -84,12 +92,8 @@ class DQNAgent(Agent):
         actions = actions.reshape(-1)
         idx = np.argmax(actions)
         self.next_direction = self.moves[idx]
-        print(state)
-        # print(actions, idx, self.next_direction)
 
     def update(self, x: int, y: int, on_apple: bool) -> bool:
-        # previous_state = (self.x, self.y, self.on_apple)
-        # next_state = (x, y, on_apple)
         game_over = super().update(x, y, on_apple)
         return game_over
 
