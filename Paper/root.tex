@@ -13,7 +13,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Development of Deep Q-Learning Agent for Playing the Game of Snake}
+\title{Snek: Development of Deep Q-Learning Agent for Playing the Game of Snake}
 \author{\IEEEauthorblockN{1\textsuperscript{st} Guilherme G. Kowalczuk}
 \IEEEauthorblockA{\textit{Instituto Tecnológico de Aeronáutica}\\
 São José dos Campos, Brazil\\
@@ -132,13 +132,53 @@ We proposed a reward engineering based on rewarding for catching apple and movin
 
 \begin{table}[h]
     \centering
-    \label{tab:NNarchtecture}
+    \label{tab:rewards}
     \caption{Reward engineering schema}
     \begin{tabular}{cc} 
         \toprule % Top horizontal line
-
+        Action & Recompense \\
+        \midrule % Mid horizontal line
+        Catch apple & +10\\
+        Approach the apple & +1 \\
+        Move away from the apple & -1 \\
+        Die & -100\\
+        \bottomrule % Bottom horizontal line
     \end{tabular}
 \end{table}
+
+The reward for capturing the apple is significantly lower by a factor of 10 compared to the penalty for encountering the end-state (dying). This design choice aims to promote extended game duration, encouraging the accumulation of at least 10 apples during the agent's gameplay.
+
+The moving direction was set by comparing the distance between snake's head and apple during state transitions. To quantify this distance, the Manhattan distance metric was employed, as the agent's movement is constrained to cardinal directions and does not allow diagonal movement.
+
+Alternative reward metrics, such as session duration and snake length, were taken into consideration. Nonetheless, the rewards presented proved to be effective in achieving convergence during the training process, even with a straightforward model structure.
+
+\section{RESULTS}
+
+We conducted multiple training sessions, with a maximum of 500 sessions each. During these sessions, we tracked the reward history and game score evolution to observe the model's convergence. The first training session took longer to converge as the neural network was being initialized. Subsequent training sets utilized the model file from the previous session, making convergence quicker.
+
+Moreover, all training sessions started with a high epsilon value, following an epsilon scheduling strategy. As a result, each training session began with low reward values that increased gradually over time (faster than the first session).
+
+We executed multiple test sessions to guarantee the model efficiency, since a Deep Q-Learning model has high variance in each execution. For each execution, the epsilon was settled as zero, so the agent could use the greedy policy established with the trained 
+
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{dqn_training2.png}
+    \caption{Rewards and game scores throughout training.}
+    \label{TrainingResults}
+\end{figure}
+
+Fig. \ref{TrainingResults} presents an overview of the rewards and game scores through training episodes, in which the agent's performance in the game consistently improves over time, which shows the model is learning an adequate policy for the game. Additionally, Fig. \ref{TestingResults} presents the results for the testing phase, where we can observe the agent has obtained at least 100 points (10 apples) in a game in 25 out of 30 episodes, which is a satisfactory performance. 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\columnwidth]{dqn_testing.png}
+    \caption{Rewards and game scores during evaluation.}
+    \label{TestingResults}
+\end{figure}
+
+
 
 
 \section{CONCLUSIONS}
