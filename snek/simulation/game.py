@@ -99,7 +99,7 @@ class Game:
         return self.reward.history, self.time
 
     def game_over(self):
-        game_over_font = pygame.font.Font(None, 50)
+        game_over_font = pygame.font.Font(None, 20)
         game_over_surface = game_over_font.render('Git Gud', True, Color.WHITE.value)
         game_over_rect = game_over_surface.get_rect(topleft = (0,35))
         self.game_window.blit(game_over_surface, game_over_rect)
@@ -118,7 +118,7 @@ class Game:
         # Check position of apple relative to the snake:
         apple_up = apple_down = apple_left = apple_right = 0
 
-        print('x', hx, ax, 'y', hy, ay)
+        # print('x', hx, ax, 'y', hy, ay)
 
         apple_up = (hy > ay)
         apple_down = (hy < ay)
