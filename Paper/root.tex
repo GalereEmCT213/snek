@@ -41,7 +41,6 @@ This work presents the implementation of an agent for the game of Snake using De
 \end{abstract}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
 First deep learning model to successfully learn control policies from high-dimensional sensory input using Reinforcement Learning (RL) was introduced by DeepMind in 2013. In that paper, they combined classical Deep Learning (DL) algorithms with RL to create a single, general-purpose learning agent that could learn directly from the screen input. The agent was able to learn to play seven Atari 2600 games by only observing the screen pixels and receiving a reward when the game score increased. This study was revolutionary since the agent was able to outperform all previous approaches on six of the games and surpassed a human expert on three of them.
@@ -63,28 +62,32 @@ In this work, we present the implementation of an agent for the game of Snake us
 
 The Deep Q-Learning algorithm is a combination of Q-Learning and Deep Neural Networks (DNN). Q-Learning is a model-free RL algorithm that learns a policy by directly approximating the optimal action-value function $Q^*(s,a)$, which is the expected return for taking action $a$ in state $s$ and following the optimal policy thereafter. This is necessary because the problem may have too much states, so it's impossible (or really inefficient) to store the action-value function for all discrete state space.
 
+
 \section{METHODOLOGY}
 
-We developed the "Game of Snake" using PyGame in Python. The game architecture is based on three classes: the \texttt{Grid}, which corresponds to the space where the game occurs and also houses the apple (the target for the agent); the \texttt{Agent}, which represents the snake; and the \texttt{Game}, which orchestrates the interactions between the agent and the environment.
+We developed the "Game of Snake" using PyGame, NumPy, Collections in Python. The game architecture is based on three classes: the \texttt{Grid}, which corresponds to the space where the game occurs and also houses the apple (the target for the agent); the \texttt{Agent}, which represents the snake; and the \texttt{Game}, which orchestrates the interactions between the agent and the environment.
 
-There are two game modes: one with closed walls, and the other without. In the first mode, the game-over event happens when the agent touches the borders of the window. However, this event does not occur in the second mode. Another way for the game to end is when the snake's head collides with its body. The score increases every time the agent obtains the target (the apple), and a new target is randomly created afterward.
+There are two game modes: one with closed walls, and the other without. In the first mode, the game-over event happens when the agent touches the borders of the window. However, this event does not occur in the second mode. Another way for the game to end is when the snake's head collides with its body, in both modes. The score increases every time the agent obtains the target (the apple), and a new target is randomly created afterward.
 
-\subsection{Selecting a Template (Heading 2)}
+We used Keras to implement the deep neural network, which evaluate the action values. The architecture consists on four dense layers, as presented in Table \ref{tab:NNarchtecture}
 
-First, confirm that you have the correct template for your paper size. This template has been tailored for output on the US-letter paper size. 
-It may be used for A4 paper size if the paper size setting is suitably modified.
 
-\subsection{Maintaining the Integrity of the Specifications}
 
-The template is used to format your paper and style the text. All margins, column widths, line spaces, and text fonts are prescribed; please do not alter them. You may note peculiarities. For example, the head margin in this template measures proportionately more than is customary. This measurement and others are deliberate, using specifications that anticipate your paper as one part of the entire proceedings, and not as an independent document. Please do not revise any of the current designations
+\subsection{Deep Q-Learning}
 
-\section{MATH}
+O QUE É? COMO FUNCIONA? QUAL A REDE IMPLEMENTADA? \textbf{POR QUE OS CACHORROS LAMBEM O PRÓPRIO KOO? E O \textit{GAYS} LAMBEM O koo ALHEIO????}
 
-Before you begin to format your paper, first write and save the content as a separate text file. Keep your text and graphic files separate until after the text has been formatted and styled. Do not use hard tabs, and limit use of hard returns to only one return at the end of a paragraph. Do not add any kind of pagination anywhere in the paper. Do not number text heads-the template will do that for you.
+\subsection{Experience Replay}
 
-Finally, complete content and organizational editing before formatting. Please take note of the following items when proofreading spelling and grammar:
+MECANISMO
 
-\subsection{Abbreviations and Acronyms} Define abbreviations and acronyms the first time they are used in the text, even after they have been defined in the abstract. Abbreviations such as IEEE, SI, MKS, CGS, sc, dc, and rms do not have to be defined. Do not use abbreviations in the title or heads unless they are unavoidable.
+\subsection{Fixed Q-Targets}
+
+MAIS BLÁBLÁBLÁ
+
+\subsection{Reward Engineering} 
+
+ATOLA LINGUIÇA
 
 \subsection{Units}
 
@@ -207,10 +210,6 @@ References are important to the reader; therefore, each citation must be complet
 
 \begin{thebibliography}{99}
 \bibitem{Sebastianelli} A. Sebastianelli, M. Tipaldi, S. L. Ullo and L. Glielmo, "A Deep Q-Learning based approach applied to the Snake game," 2021 29th Mediterranean Conference on Control and Automation (MED), PUGLIA, Italy, 2021, pp. 348-353, doi: 10.1109/MED51440.2021.9480232.
-
-
-
-
 
 \end{thebibliography}
 
