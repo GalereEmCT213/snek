@@ -232,7 +232,7 @@ class Game:
                  direction_up, direction_down, direction_left, direction_right]
         return np.array([state])
     
-    def _get_game_score(self):
+    def get_game_score(self):
         """
         Get game score when it is called
         """

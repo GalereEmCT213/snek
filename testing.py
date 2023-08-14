@@ -1,9 +1,8 @@
 import os
-import numpy as np
 import matplotlib.pyplot as plt
 
 from snek.learning import DQNAgent
-from snek.simulation import GridLoop, Game, GridWall
+from snek.simulation import Game, GridWall
 
 agent_name = 'burrice-artificial'
 fig_format = 'png'
@@ -40,7 +39,7 @@ for episodes in range(1, num_episodes+1):
     
     print(f'episode: {episodes}, time: {time}, reward: {reward}')
     reward_history.append(reward)
-    score_history.append(game._get_game_score())
+    score_history.append(game.get_game_score())
 
     game.agent.update_epsilon()
 
