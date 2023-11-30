@@ -14,7 +14,7 @@ class Reward:
         self.death_factor = -100
         self.apple_factor = 10
         self.tick_factor = -1
-        self.dist_factor = 3
+        self.dist_factor = 2
         self.old_pos = (0,0)
 
     def reward_engine(
@@ -34,9 +34,9 @@ class Reward:
         self.dist = self._dist_apple_head(apple_pos, head)
         compare_dist = self._compare_distance(apple_pos, head)
         if not compare_dist:
-            self.dist_factor = -1
+            self.dist_factor = -2
         else:
-            self.dist_factor = 1
+            self.dist_factor = 2
 
         reward = self.apple_factor*appl + self.death_factor*dead + self.dist_factor
         reward += self.tick_factor*tick
