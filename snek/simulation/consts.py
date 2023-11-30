@@ -2,6 +2,11 @@ from enum import Enum
 
 import pygame
 
+GRID_SIZE_X = 20
+GRID_SIZE_Y = 20
+AGENT_SIZE_X = 10
+AGENT_SIZE_Y = 10
+
 # Enum with a list of possible movements (Left, Up, Down, Right) in cartesian coordinates
 class Move(Enum):
     L = (-1, 0)

@@ -13,8 +13,8 @@ class Reward:
         self.history = 0
         self.death_factor = -100
         self.apple_factor = 10
-        self.tick_factor = 1
-        self.dist_factor = 1
+        self.tick_factor = -1
+        self.dist_factor = 3
         self.old_pos = (0,0)
 
     def reward_engine(
@@ -28,9 +28,6 @@ class Reward:
         """
         Calculate the total reward after an update
 
-        :param apple_score: score from catched apple 
-        :param snake_len: length of the snake
-        :param score_time: the time that has passed
         :param dead: indicates if the snake is still alive 
         """
         head = snake_body[0]

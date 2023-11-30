@@ -7,6 +7,8 @@ from snek.simulation.consts import Color, Move
 from snek.simulation.score import Score
 from snek.simulation.reward import Reward
 
+import matplotlib.pyplot as plt
+
 
 def check_quit() -> bool:
     """
@@ -92,8 +94,9 @@ class Game:
         self.game_window.fill(Color.BLACK.value)
         pygame.draw.rect(self.game_window, Color.RED.value, self.grid.apple)
         for sprite in self.agent.sprites:
-            pygame.draw.rect(self.game_window, Color.GREEN.value, sprite)
-        self.score.display(self.game_window)
+            pygame.draw.rect(self.game_window, Color.YELLOW.value, sprite)
+        # Uncomment
+        # self.score.display(self.game_window)
         pygame.display.update()
         self.fps.tick(self.speed)
         self.time += 1
@@ -139,6 +142,7 @@ class Game:
             
             state = next_state
             self.draw()
+
             if not check_quit():
                 break
         else:

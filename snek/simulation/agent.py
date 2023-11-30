@@ -4,6 +4,8 @@ import random
 
 from snek.simulation.consts import Move
 
+from snek.simulation.consts import AGENT_SIZE_X, AGENT_SIZE_Y
+
 # Base Snake-Playing Agent Class
 class Agent:
     def __init__(
@@ -11,12 +13,12 @@ class Agent:
             x: int = 0,
             y: int = 0, 
             direction: Move = Move.R, 
-            initial_size: int = 5, 
+            initial_size: int = 3, 
             gamma: float = 0.9):
         self.initial_size = initial_size
         self.x, self.y = x, y
         self.body = deque((x + i, y + 5) for i in reversed(range(initial_size)))
-        self.size_x, self.size_y = (10, 10)
+        self.size_x, self.size_y = (AGENT_SIZE_X, AGENT_SIZE_Y)
         self.sprites = deque(pygame.Rect(x*self.size_x, y*self.size_y, self.size_x, self.size_y) for x, y in self.body)
         self.initial_direction = direction
         self.direction = direction

@@ -29,7 +29,7 @@ class Score:
         :type game_window: pygame Surface
         """
         score_font = pygame.font.Font(None, 30)
-        score_surface = score_font.render(f'SCORE: {self.score:.0f}', True, Color.YELLOW.value)
+        score_surface = score_font.render(f'SCORE: {self.score:.0f}', True, Color.GREEN.value)
         score_rect = score_surface.get_rect()
         game_window.blit(score_surface, score_rect)
     
