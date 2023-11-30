@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from snek.learning import DQNAgent
 from snek.simulation import Game, GridWall
 
-agent_name = 'burrice-artificial'
+agent_name = 'smart-snake'
 fig_format = 'png'
 num_episodes = 1000
 epsilon = 1
