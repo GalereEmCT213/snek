@@ -6,7 +6,7 @@ import pygame
 import numpy as np
 from tensorflow.keras import activations, losses, optimizers, layers
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.applications import InceptionV3
+from tensorflow.keras.applications import InceptionV3, MobileNetV2
 
 from snek.learning.dql_agent import DQNAgent
 from snek.simulation.game import Game
@@ -39,7 +39,7 @@ class CNNAgent(DQNAgent):
         Creates the convolutional network model with off-policy training.
         The CNN calculates the next state.
         """
-        transfer_model = InceptionV3(
+        transfer_model = MobileNetV2(
             include_top=False, 
             weights='imagenet', 
             input_shape=(AGENT_SIZE_X*GRID_SIZE_X, AGENT_SIZE_Y* GRID_SIZE_Y, 3),
