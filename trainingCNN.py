@@ -23,7 +23,7 @@ batch_size = 128
 train = True
 
 # Declares the enviroment and its objects
-agent = CNNAgent(epsilon=epsilon, action_size=4, gamma=gamma, learning_rate=0.1)
+agent = CNNAgent(epsilon=epsilon, action_size=4, gamma=gamma, learning_rate=0.005)
 grid = GridWall(x=GRID_SIZE_X, y=GRID_SIZE_Y)
 game = CNNGame(agent, grid, speed=150, manual_end=False)
 
