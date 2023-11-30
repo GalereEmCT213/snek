@@ -13,8 +13,8 @@ from snek.simulation.consts import Move
 class DQNAgent(Agent):
     def __init__(
             self,
-            state_size,
-            action_size,
+            state_size=0,
+            action_size=0,
             gamma=0.95,
             epsilon=0.5,
             epsilon_min=0.01,
@@ -23,6 +23,7 @@ class DQNAgent(Agent):
             buffer_size=4098,
             batch_size=32
         ):
+        super().__init__()
         self.state_size = state_size
         self.action_size = action_size
         self.replay_buffer = collections.deque(maxlen=buffer_size)
@@ -34,7 +35,6 @@ class DQNAgent(Agent):
         self.batch_size = batch_size
         self.moves = list(Move)
         self.model = self.make_model()
-        super().__init__()
     
     def make_model(self):
         """
